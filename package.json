@@ -1,0 +1,29 @@
+{
+  "name": "aegis-ui-tools",
+  "version": "1.0.4",
+  "description": "前端项目辅助工具",
+  "author": "wuhao",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p src",
+    "publish": "npm run build"
+  },
+  "repository": "https://github.com/wuhao000/aegis-tools.git",
+  "devDependencies": {
+    "typescript": "^3.5.2"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org"
+  },
+  "dependencies": {
+    "@types/node": "^12.0.10",
+    "fs": "0.0.1-security",
+    "js-beautify": "^1.10.0"
+  },
+  "bin": {
+    "generate-api": "./src/generate-api.js"
+  }
+}
