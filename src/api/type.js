@@ -63,7 +63,7 @@ function resolveResponseType(response, definitions) {
             return ref_1.resolveRef(ref, definitions);
         }
         else if (response.schema.items) {
-            if (response.schema.items.genericRef.simpleRef) {
+            if (response.schema.items.genericRef && response.schema.items.genericRef.simpleRef) {
                 return response.schema.items.genericRef.simpleRef + '[]';
             }
             console.debug('无法识别response类型：');

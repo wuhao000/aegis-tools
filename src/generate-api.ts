@@ -29,6 +29,10 @@ if (fs.existsSync(apiConfigPath)) {
 }
 
 
+function toPascal(name) {
+  return name.substring(0, 1).toUpperCase() + name.substring(1);
+}
+
 function pureDefinitions(definitions: ApiDefinitions): ApiDefinitions {
   const res: ApiDefinitions = {};
   Object.keys(definitions).forEach(key => {
@@ -37,6 +41,24 @@ function pureDefinitions(definitions: ApiDefinitions): ApiDefinitions {
   return res;
 }
 
+
+export function normalizeName(name: string) {
+  if (!isNaN(parseInt(name[0]))) {
+    name = '_' + name;
+  }
+  if (name.includes('.')) {
+    const parts = name.split('.');
+    name = parts.map((part, index) => {
+      if (index !== 0) {
+        return toPascal(part);
+      } else {
+        return part;
+      }
+    }).join('');
+  }
+  name = name.replace('[', '').replace(']', '');
+  return name;
+}
 
 /**
  * 生成类型定义
@@ -76,8 +98,7 @@ async function generateApi(config: ApiConfig) {
     keys.forEach(key => {
       const definition = definitions[key];
       const inter = new Interface();
-      inter.name = pure(key);
-      inter.name = toPascal(inter.name);
+      inter.setName(toPascal(pure(key)));
       const propertyDefinitions = definition.properties;
       if (definition.properties) {
         const properties = Object.keys(definition.properties);
@@ -91,7 +112,7 @@ async function generateApi(config: ApiConfig) {
             let enumType = '';
             if (propertyDefinition.enum) {
               const type = new Type();
-              type.name = toPascal(inter.name) + toPascal(p);
+              type.name = inter.name + toPascal(p);
               type.type = propertyType;
               type.values = propertyDefinition.enum;
               type.description = propertyDefinition.description;
@@ -171,10 +192,6 @@ async function generateApi(config: ApiConfig) {
   }
 
 
-  function toPascal(name) {
-    return name.substring(0, 1).toUpperCase() + name.substring(1);
-  }
-
   function generateApiDefinitions(data: SwaggerDoc,
                                   beanInterfaces: Interface[], config: Config): ApiDefinitionsResult {
     const apis: Api[] = [];
@@ -208,7 +225,7 @@ async function generateApi(config: ApiConfig) {
           api.definitionPath.push(api.name);
           // POST和PUT请求要判断请求的参数格式是json格式还是form表单的格式
           if (['POST', 'PUT'].includes(method)) {
-            const nonPathParameters = typeDefinition.parameters.filter(it => it.in !== 'path');
+            const nonPathParameters = typeDefinition.parameters && typeDefinition.parameters.filter(it => it.in !== 'path') || [];
             api.isFormData = !(nonPathParameters.length === 1 && nonPathParameters[0].in === 'body');
           }
           const responseType = resolveResponseType(
@@ -217,12 +234,12 @@ async function generateApi(config: ApiConfig) {
           if (responseType) {
             api.responseType = responseType;
           }
-          if (typeDefinition.parameters.length) {
+          if (typeDefinition.parameters && typeDefinition.parameters.length) {
             typeDefinition.parameters.forEach((p: SwaggerParameter) => {
               let enumType = '';
               if (p.enum) {
                 const type = new Type();
-                type.name = toPascal(api.name) + toPascal(p.name);
+                type.name = toPascal(api.name) + normalizeName(toPascal(p.name));
                 type.values = p.enum;
                 type.description = p.description;
                 if (!types.some(t => t.name === type.name)) {
@@ -247,7 +264,7 @@ async function generateApi(config: ApiConfig) {
                   api.bodyParameter = {
                     name: p.name,
                     required: true,
-                    type: 'Array<' + pure(p.schema.items.genericRef.simpleRef) + '>'
+                    type: 'Array<' + (p.schema.items.genericRef !== undefined ? pure(p.schema.items.genericRef.simpleRef) : 'any') + '>'
                   };
                 }
               }
@@ -316,13 +333,14 @@ ${space}${key}: ${toDefinitionString(value, level + 1, key)}`;
                   if (parentKey) {
                     name = toPascal(parentKey) + name;
                   }
+                  name = normalizeName(name);
                   apiInterfaces.push({
                     name,
                     body: toDefinitionString(value, level, key)
                   });
-                  return '\t' + key + ': ' + name;
+                  return `\t${key}: ${name}`;
                 } else {
-                  return '\t' + key + ': ' + toDefinitionString(value, level + 1, key);
+                  return `\t${key}: ${toDefinitionString(value, level + 1, key)}`;
                 }
               }
             } else if (['number', 'boolean'].includes(typeof value)) {

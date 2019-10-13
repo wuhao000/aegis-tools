@@ -26,6 +26,9 @@ if (fs.existsSync(apiConfigPath)) {
 else {
     console.error('缺少api.config.js');
 }
+function toPascal(name) {
+    return name.substring(0, 1).toUpperCase() + name.substring(1);
+}
 function pureDefinitions(definitions) {
     const res = {};
     Object.keys(definitions).forEach(key => {
@@ -33,6 +36,25 @@ function pureDefinitions(definitions) {
     });
     return res;
 }
+function normalizeName(name) {
+    if (!isNaN(parseInt(name[0]))) {
+        name = '_' + name;
+    }
+    if (name.includes('.')) {
+        const parts = name.split('.');
+        name = parts.map((part, index) => {
+            if (index !== 0) {
+                return toPascal(part);
+            }
+            else {
+                return part;
+            }
+        }).join('');
+    }
+    name = name.replace('[', '').replace(']', '');
+    return name;
+}
+exports.normalizeName = normalizeName;
 /**
  * 生成类型定义
  * @param {ApiConfig[]} config
@@ -67,8 +89,7 @@ async function generateApi(config) {
         keys.forEach(key => {
             const definition = definitions[key];
             const inter = new interface_1.default();
-            inter.name = type_1.pure(key);
-            inter.name = toPascal(inter.name);
+            inter.setName(toPascal(type_1.pure(key)));
             const propertyDefinitions = definition.properties;
             if (definition.properties) {
                 const properties = Object.keys(definition.properties);
@@ -82,7 +103,7 @@ async function generateApi(config) {
                         let enumType = '';
                         if (propertyDefinition.enum) {
                             const type = new type_1.default();
-                            type.name = toPascal(inter.name) + toPascal(p);
+                            type.name = inter.name + toPascal(p);
                             type.type = propertyType;
                             type.values = propertyDefinition.enum;
                             type.description = propertyDefinition.description;
@@ -164,9 +185,6 @@ async function generateApi(config) {
             }).join('');
         });
     }
-    function toPascal(name) {
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
-    }
     function generateApiDefinitions(data, beanInterfaces, config) {
         const apis = [];
         const definitions = pureDefinitions(data.definitions);
@@ -199,19 +217,19 @@ async function generateApi(config) {
                     api.definitionPath.push(api.name);
                     // POST和PUT请求要判断请求的参数格式是json格式还是form表单的格式
                     if (['POST', 'PUT'].includes(method)) {
-                        const nonPathParameters = typeDefinition.parameters.filter(it => it.in !== 'path');
+                        const nonPathParameters = typeDefinition.parameters && typeDefinition.parameters.filter(it => it.in !== 'path') || [];
                         api.isFormData = !(nonPathParameters.length === 1 && nonPathParameters[0].in === 'body');
                     }
                     const responseType = type_1.resolveResponseType(typeDefinition.responses['200'], definitions);
                     if (responseType) {
                         api.responseType = responseType;
                     }
-                    if (typeDefinition.parameters.length) {
+                    if (typeDefinition.parameters && typeDefinition.parameters.length) {
                         typeDefinition.parameters.forEach((p) => {
                             let enumType = '';
                             if (p.enum) {
                                 const type = new type_1.default();
-                                type.name = toPascal(api.name) + toPascal(p.name);
+                                type.name = toPascal(api.name) + normalizeName(toPascal(p.name));
                                 type.values = p.enum;
                                 type.description = p.description;
                                 if (!types.some(t => t.name === type.name)) {
@@ -238,7 +256,7 @@ async function generateApi(config) {
                                     api.bodyParameter = {
                                         name: p.name,
                                         required: true,
-                                        type: 'Array<' + type_1.pure(p.schema.items.genericRef.simpleRef) + '>'
+                                        type: 'Array<' + (p.schema.items.genericRef !== undefined ? type_1.pure(p.schema.items.genericRef.simpleRef) : 'any') + '>'
                                     };
                                 }
                             }
@@ -310,14 +328,15 @@ ${space}${key}: ${toDefinitionString(value, level + 1, key)}`;
                                     if (parentKey) {
                                         name = toPascal(parentKey) + name;
                                     }
+                                    name = normalizeName(name);
                                     apiInterfaces.push({
                                         name,
                                         body: toDefinitionString(value, level, key)
                                     });
-                                    return '\t' + key + ': ' + name;
+                                    return `\t${key}: ${name}`;
                                 }
                                 else {
-                                    return '\t' + key + ': ' + toDefinitionString(value, level + 1, key);
+                                    return `\t${key}: ${toDefinitionString(value, level + 1, key)}`;
                                 }
                             }
                         }

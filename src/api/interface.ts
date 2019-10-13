@@ -1,3 +1,5 @@
+import {normalizeName} from '../generate-api';
+
 interface InterfaceProperty {
   description: string;
   name: string;
@@ -12,6 +14,10 @@ export default class Interface {
   constructor() {
     this.name = '';
     this.properties = [];
+  }
+
+  setName(name: string) {
+    this.name = normalizeName(name);
   }
 
   toString() {
