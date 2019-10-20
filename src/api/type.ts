@@ -1,5 +1,28 @@
+import {SwaggerResponse} from '../../types/swagger';
 import {resolveRef} from './ref';
-import {ApiDefinitions, SwaggerResponse} from '../../types/swagger';
+
+export const types: Type[] = [];
+
+export function findTypeByEnum(values: any[]): Type | undefined {
+  return types.find(t => hasSameItems(t.values, values));
+}
+
+export function addType(type: Type) {
+  if (!types.some(t => t.name === type.name)
+      && !types.some(t => hasSameItems(t.values, type.values))) {
+    types.push(type);
+  }
+}
+
+function hasSameItems(a: any[], b: any[]) {
+  if (a.length !== b.length) {
+    return false;
+  }
+  if (a.some(it => !b.includes(it)) || b.some(it => !a.includes(it))) {
+    return false;
+  }
+  return true;
+}
 
 export default class Type {
   public description: string;
@@ -56,12 +79,12 @@ export function resolveType(propertyType: string, propertyDefinition?) {
   return type;
 }
 
-export function resolveResponseType(response: SwaggerResponse, definitions: ApiDefinitions) {
+export function resolveResponseType(response: SwaggerResponse) {
   if (response.schema) {
-    if (response.schema.genericRef) {
+    if (response.schema.genericRef || response.schema.$ref) {
       // 将«»替换为<>
-      let ref = pure(response.schema.genericRef.simpleRef);
-      return resolveRef(ref, definitions);
+      let ref = pure((response.schema.genericRef && response.schema.genericRef.simpleRef) || response.schema.$ref.replace('#/definitions/', ''));
+      return resolveRef(ref);
     } else if (response.schema.items) {
       if (response.schema.items.genericRef && response.schema.items.genericRef.simpleRef) {
         return response.schema.items.genericRef.simpleRef + '[]';
@@ -69,7 +92,6 @@ export function resolveResponseType(response: SwaggerResponse, definitions: ApiD
       console.debug('无法识别response类型：');
       console.log(response);
     }
-  } else {
   }
   return undefined;
 }

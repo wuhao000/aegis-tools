@@ -50,7 +50,7 @@
     <inspection_tool class="aegis.code.check.validation.kotlin.format" enabled="true" level="Code Format" enabled_by_default="true" />
     <inspection_tool class="aegis.code.check.validation.name.java.object" enabled="true" level="Code Format" enabled_by_default="true" />
     <inspection_tool class="aegis.code.check.validation.name.object" enabled="true" level="Code Format" enabled_by_default="true" />
-    <inspection_tool class="aegis.code.check.validation.typescript.format" enabled="true" level="Code Format" enabled_by_default="true" />
+    <inspection_tool class="aegis.code.check.validation.typescript.format" enabled="false" level="Code Format" enabled_by_default="false" />
     <inspection_tool class="aegis.code.check.validation.vue.format" enabled="true" level="Code Format" enabled_by_default="true" />
     <inspection_tool class="aegis.code.check.validation.xml.mybatis" enabled="true" level="Code Format" enabled_by_default="true" />
   </profile>

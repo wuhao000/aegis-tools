@@ -5,17 +5,15 @@ module.exports = {
     'ts',
     'tsx',
     'jsx',
-    'json',
-    'vue'
+    'json'
   ],
   coverageReporters: [
     'html',
     'text-summary'
   ],
   transform: {
-    '.*\\.(vue)$': 'vue-jest',
     '^.+\\.jsx?$': 'babel-jest',
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.tsx?$': 'ts-jest',
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'

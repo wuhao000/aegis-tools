@@ -1,5 +1,5 @@
-import {getConfig} from '../api/config';
 import {generateAPI, generateData, normalizeName} from '../generate-api';
+import {config, data} from './utils';
 
 describe('标准化名称', () => {
   it('数字', () => {
@@ -26,9 +26,7 @@ describe('标准化名称', () => {
     }
   });
   it('解析', () => {
-    const config = getConfig();
-    const data = JSON.parse(require('fs').readFileSync('src/__tests__/data/api.json')
-        .toString());
+
     const res = generateData(config, [{
       config: config.configs[0],
       data

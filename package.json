@@ -1,18 +1,23 @@
 {
   "name": "aegis-ui-tools",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "前端项目辅助工具",
   "author": "wuhao",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -p src",
+    "build": "tsc -p src --outDir dist",
     "publish": "npm run build",
-    "api": "tsc -p src && node src/generate-api.js"
+    "api": "npm run build && node dist/execute.js",
+    "test": "jest"
   },
   "repository": "https://github.com/wuhao000/aegis-tools.git",
   "devDependencies": {
+    "@types/jest": "^24.0.19",
     "aegis-api-proxy": "0.0.1",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
     "lodash.merge": "^4.6.2",
+    "ts-jest": "^24.1.0",
     "typescript": "^3.5.2"
   },
   "files": [
@@ -24,9 +29,10 @@
   "dependencies": {
     "@types/node": "^12.0.10",
     "fs": "0.0.1-security",
-    "js-beautify": "^1.10.0"
+    "js-beautify": "^1.10.0",
+    "pascalcase": "^1.0.0"
   },
   "bin": {
-    "generate-api": "./src/generate-api.js"
+    "generate-api": "./dist/execute.js"
   }
 }

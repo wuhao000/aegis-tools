@@ -1,4 +1,4 @@
-import {normalizeName} from '../generate-api';
+import {normalizeName} from './generate-api';
 
 interface InterfaceProperty {
   description: string;

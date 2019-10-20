@@ -1,54 +1,122 @@
-import {ApiDefinitions} from '../../types/swagger';
+import {config} from './config';
 
 /**
  * 解析swagger中的类型对应的ts类型
  */
-export function resolveRef(ref: string, definitions: ApiDefinitions) {
-  // Response只取data部分
-  return resolveInner(ref.replace(/Response<(.*?)>/i, '$1')
-      .replace(/ResponseSimpleEnum<(.*?)>/i, '$1')).replace(/_{/g, '<')
-      .replace(/}_/g, '>');
+export function resolveRef(ref: string) {
+  const obj = resolveRefObject(ref);
+  if (obj.name === 'Response' || obj.name === 'ResponseSimpleEnum') {
+    return obj.typeParameters[0].toString();
+  } else {
+    return obj.toString();
+  }
+}
 
-  function resolveInner(ref) {
-    // 解析泛型参数
-    const match = /(?!Array<)(\w+)<([^<>]+)>/.exec(ref);
-    let copyRef = ref;
-    if (match) {
-      const name = match[1];
-      let typeParameter = match[2];
-      if (typeParameter.includes(',')) {
-        typeParameter = typeParameter.split(',')
-            .map(it => resolveInner(it)).join(',');
+function isLetter(c: string) {
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+
+const refConfig = {
+  arrayTypes: ['List', 'Iterable', 'ArrayList', 'LinkedList'],
+  objectTypes: ['Map', 'HashMap', 'TreeMap'],
+  numberTypes: ['int', 'long', 'double', 'float']
+};
+
+export function isObjectType(name: string): boolean {
+  return refConfig.objectTypes.includes(name);
+}
+
+export function isArrayType(name: string): boolean {
+  return refConfig.arrayTypes.includes(name);
+}
+
+class RefObject {
+  public name: string;
+  public parent: RefObject;
+  public typeParameters: Array<RefObject>;
+
+  public constructor(p1: string | RefObject, p2?: RefObject) {
+    if (p2) {
+      this.name = p1 as string;
+      this.parent = p2;
+    } else if (p1) {
+      if (typeof p1 === 'string') {
+        this.name = p1;
       } else {
-        typeParameter = resolveInner(typeParameter);
-      }
-      if (['HashMap', 'Map', 'TreeMap'].includes(name)) {
-        copyRef = copyRef.replace(match[0], `{[key: string]: ${typeParameter.replace(/(.*?),(.*?)/, '$2')}}`);
-      } else if (['List', 'ArrayList', 'LinkedList'].includes(name)) {
-        if (typeParameter.startsWith('{')) {
-          copyRef = copyRef.replace(match[0], `Array_{${typeParameter}}_`);
-        } else {
-          copyRef = copyRef.replace(match[0], `${typeParameter}[]`);
-        }
-      }
-      if (ref === copyRef) {
-        ref = ref.replace(/(ArrayList|LinkedList|List)/g, 'Array');
-        return ref;
-      } else if (copyRef.includes('<')) {
-        return resolveInner(copyRef);
-      } else {
-        return copyRef;
-      }
-    } else {
-      if (['int', 'long', 'double', 'float'].includes(copyRef)) {
-        return 'number';
-      } else if (copyRef === 'Unit') {
-        return 'never';
-      } else if (copyRef === 'object') {
-        return 'any';
-      } else {
-        return copyRef;
+        this.parent = p1;
       }
     }
+    this.typeParameters = [];
   }
+
+  public toString() {
+    if (isArrayType(this.name)) {
+      if (this.typeParameters.length >= 1) {
+        if (this.typeParameters.length > 1) {
+          console.error(`数组类型【${this.name}】只允许有一个泛型参数`);
+        }
+        if (this.typeParameters[0].typeParameters.length === 0) {
+          return `${this.typeParameters[0].toString()}[]`;
+        }
+        return `Array<${this.typeParameters[0].toString()}>`;
+      } else {
+        return 'any[]';
+      }
+    } else if (isObjectType(this.name)) {
+      if (this.typeParameters.length >= 2) {
+        if (this.typeParameters.length > 2) {
+          console.error(`对象类型【${this.name}】只允许有2个泛型参数`);
+        }
+        return `{[key: ${this.typeParameters[0].toString()}]: ${this.typeParameters[1].toString()}}`;
+      } else {
+        return `{[key: string]: any}`;
+      }
+    } else if (this.typeParameters.length) {
+      return `${this.name}<${this.typeParameters.map(it => it.toString()).join(', ')}>`;
+    } else if (config.typesAsAny && config.typesAsAny.includes(this.name)) {
+      return 'any';
+    } else if (refConfig.numberTypes.includes(this.name)) {
+      return 'number';
+    } else if (this.name === 'Unit') {
+      return 'never';
+    } else if (this.name === 'object') {
+      return 'any';
+    } else if (['String', 'Boolean'].includes(this.name)) {
+      return this.name.toLowerCase();
+    } else {
+      return this.name;
+    }
+  }
+}
+
+// 将引用名称解析为对象
+export function resolveRefObject(ref) {
+  let name = '';
+  const refObj = new RefObject(null);
+  let tmp: RefObject = refObj;
+  for (const char of ref) {
+    if (isLetter(char)) {
+      name += char;
+    } else {
+      const copyName = name;
+      if (['<'].includes(char)) {
+        if (tmp.name) {
+          const newRef = new RefObject(copyName, tmp);
+          tmp.typeParameters.push(newRef);
+          tmp = newRef;
+        } else {
+          tmp.name = copyName;
+        }
+      } else if (char === ',' || char === '>') {
+        if (copyName) {
+          tmp.typeParameters.push(new RefObject(copyName));
+        }
+        if (char === '>') {
+          tmp = tmp.parent;
+        }
+      }
+      name = '';
+    }
+  }
+  return refObj;
 }

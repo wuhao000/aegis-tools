@@ -1,3 +1,3 @@
-import {generateAPI} from './generate-api';
+import {generateAPI} from './api/generate-api';
 
 generateAPI();
