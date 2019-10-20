@@ -1,39 +1,23 @@
 #!/usr/bin/env node
 
+import {ApiConfig, Config, getConfig} from './api/config';
 import {ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
-import Api from './api/api';
+import Api, {toDefinitionString} from './api/api';
 import {beanDefFileName, writeFile} from './api/file';
 import ImportDeclaration from './api/import-declaration';
 import Interface from './api/interface';
 import Type, {pure, resolveResponseType, resolveType} from './api/type';
-
-const fs = require('fs');
-
-const axios = require('axios');
-const merge = require('lodash.merge');
-const path = require('path');
+import toPascal from './pascal';
 
 
-const cmdPath = process.env.INIT_CWD || process.cwd();
-const apiConfigPath = cmdPath + path.sep + 'api.config.js';
-if (fs.existsSync(apiConfigPath)) {
-  const configModulePath = path.relative(__dirname, apiConfigPath);
-  const config: ApiConfig = require(configModulePath);
+export function generateAPI() {
+  const config = getConfig();
   if (config && config.configs && config.configs.length) {
-    generateApi(config);
-  } else {
-    console.error('配置不能为空');
+    return generateApi(config);
   }
-} else {
-  console.error('缺少api.config.js');
 }
 
-
-function toPascal(name) {
-  return name.substring(0, 1).toUpperCase() + name.substring(1);
-}
-
-function pureDefinitions(definitions: ApiDefinitions): ApiDefinitions {
+export function pureDefinitions(definitions: ApiDefinitions): ApiDefinitions {
   const res: ApiDefinitions = {};
   Object.keys(definitions).forEach(key => {
     res[pure(key)] = definitions[key];
@@ -41,11 +25,7 @@ function pureDefinitions(definitions: ApiDefinitions): ApiDefinitions {
   return res;
 }
 
-
 export function normalizeName(name: string) {
-  if (!isNaN(parseInt(name[0]))) {
-    name = '_' + name;
-  }
   if (name.includes('.')) {
     const parts = name.split('.');
     name = parts.map((part, index) => {
@@ -57,15 +37,45 @@ export function normalizeName(name: string) {
     }).join('');
   }
   name = name.replace('[', '').replace(']', '');
+  if (!isNaN(parseInt(name[0]))) {
+    name = '_' + name;
+  }
   return name;
+}
+
+export async function generateApi(config: ApiConfig) {
+  const axios = require('axios');
+  const requests = [];
+  const datas = [];
+  for (const c of config.configs) {
+    try {
+      const request = axios.get(c.url);
+      requests.push(request);
+      const data = (await request).data;
+      datas.push({
+        config: c,
+        data
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  const res = generateData(config, datas);
+  writeFile(res);
+  return requests;
 }
 
 /**
  * 生成类型定义
  * @param {ApiConfig[]} config
+ * @param datas
  * @returns {Promise<void>}
  */
-async function generateApi(config: ApiConfig) {
+export function generateData(config: ApiConfig, datas: Array<{
+  config: Config,
+  data: SwaggerDoc
+}>): APIData {
+  const merge = require('lodash.merge');
   config = merge({
     typeRoot: 'src/types',
     apiRoot: 'src/api'
@@ -73,28 +83,41 @@ async function generateApi(config: ApiConfig) {
   // 声明的类型
   const types: Type[] = [];
   // 声明的接口
-  const apiInterfaces = [];
   let beanInterfaces: Interface[] = [];
   let apis: Api[] = [];
   let apiObject: object = {};
-  for (const c of config.configs) {
-    const data = (await axios.get(c.url)).data;
-    beanInterfaces = beanInterfaces.concat(generateBeanDefinitions(data, c));
-    const apiData = generateApiDefinitions(data, beanInterfaces, c);
-    apis = apis.concat(apiData.apis);
-    apiObject = merge(apiObject, apiData.apiObject);
-  }
+  datas.forEach(item => {
+    const c = item.config;
+    const data = item.data;
+    try {
+      beanInterfaces = beanInterfaces.concat(generateBeanDefinitions(data, c));
+      const apiData = generateApiDefinitions(data, beanInterfaces, c);
+      apis = apis.concat(apiData.apis);
+      apiObject = merge(apiObject, apiData.apiObject);
+    } catch (e) {
+      console.error(e);
+    }
+  });
   const apiImportList: ImportDeclaration[] = [];
   apiImportList.push(new ImportDeclaration(
       null, beanInterfaces.map(it => it.name), `./${beanDefFileName}`
   ));
-  writeFile(config, types, beanInterfaces, toString, apiObject, apiImportList, toDefinitionString, apiInterfaces);
-
+  return {
+    config,
+    types,
+    interfaces: beanInterfaces,
+    apiObject,
+    imports: apiImportList,
+    generatedApisBody: toDefinitionString(apiObject),
+    apiInterfaces: resolveAPIInterfaces(apiObject, 0, null, [])
+        .map(it => ({name: it.name, body: toDefinitionString(it.value, it.level, it.key)}))
+  } as APIData;
 
   function generateBeanDefinitions(data: SwaggerDoc, config: Config): Interface[] {
     const definitions = data.definitions;
     const keys = Object.keys(data.definitions);
     const beanInterfaces: Interface[] = [];
+    // keys: ['Response«List«SysDic»»', 'Response«List«WorkordersExtraField»»', 'User', ...]
     keys.forEach(key => {
       const definition = definitions[key];
       const inter = new Interface();
@@ -161,8 +184,6 @@ async function generateApi(config: ApiConfig) {
                 }
               } else {
                 console.error(`数据类型【${inter.name}】包含泛型参数，但是缺少泛型映射配置`);
-                // console.log(definition);
-                // console.log(inter);
               }
             } else {
               console.error(`数据类型【${inter.name}】包含泛型参数，但是缺少泛型映射配置`);
@@ -276,7 +297,6 @@ async function generateApi(config: ApiConfig) {
     });
     const apiObject = {};
     apis.forEach(api => {
-      // console.log(api.definitionPath);
       let tmp = apiObject;
       api.definitionPath.forEach(dp => {
         if (!tmp[dp]) {
@@ -286,113 +306,45 @@ async function generateApi(config: ApiConfig) {
       });
       Object.assign(tmp, api);
     });
-    // console.log(apiObject);
     return {
       apis,
       apiObject
     };
   }
 
-
-  function toDefinitionString(obj: any, level: number = 0, parentKey: string = null) {
-    let str = '';
+  function resolveAPIInterfaces(obj: any, level: number = 0, parentKey: string = null, interfaces: Array<any> = []) {
     if (typeof obj === 'object') {
       if (obj.method && obj.url) {
-        if (obj.parameters.length === 1 && obj.parameters[0].type === 'string') {
-          str += 'StringIdAPI<T';
-        } else if (obj.parameters.length === 1 && obj.parameters[0].type === 'number') {
-          str += 'NumberIdAPI<T';
-        } else {
-          str += 'GenericAPI<T';
-        }
-        if (obj.responseType) {
-          str += `, ${obj.responseType}`;
-        }
-        if (obj.bodyParameter && obj.parameters.length) {
-          // console.error('混合参数无法解析');
-        } else if (obj.bodyParameter) {
-          str += ', ' + obj.bodyParameter.type;
-        }
-        str += '>';
       } else {
-        const space = ' '.repeat(2 * level + 2);
-        str += '{';
         const keys = Object.keys(obj);
         if (keys.length) {
-          str += `\n${keys.map(key => {
+          keys.forEach(key => {
             const value = obj[key];
             if (typeof value === 'object') {
               if (value.method && value.url) {
-                return `${space}/**
-${space} * ${value.summary}
-${space} */
-${space}${key}: ${toDefinitionString(value, level + 1, key)}`;
+                resolveAPIInterfaces(value, level + 1, key, interfaces);
               } else {
                 if (level === 0) {
                   let name = toPascal(key) + 'API<T>';
                   if (parentKey) {
                     name = toPascal(parentKey) + name;
                   }
+                  resolveAPIInterfaces(value, level, key, interfaces);
                   name = normalizeName(name);
-                  apiInterfaces.push({
+                  interfaces.push({
                     name,
-                    body: toDefinitionString(value, level, key)
+                    value,
+                    level,
+                    key
                   });
-                  return `\t${key}: ${name}`;
-                } else {
-                  return `\t${key}: ${toDefinitionString(value, level + 1, key)}`;
                 }
               }
-            } else if (['number', 'boolean'].includes(typeof value)) {
-              return `${key}: ${value}`;
-            } else {
-              return `${key}: '${value}'`;
             }
-          }).join(`;\n${' '.repeat(2 * level)}`)};\n`;
-        }
-        str += ' '.repeat(2 * level) + '}';
-      }
-    }
-    return str;
-  }
-
-  function toString(obj, level = 0) {
-    let str = '';
-    const space = ' '.repeat(2 * level);
-    if (typeof obj === 'object') {
-      str += '{\n';
-      const keys = Object.keys(obj);
-      if (keys.includes('url') && keys.includes('method')) {
-        str += space + `url: '${obj.url}',\n${space}method: '${obj.method}'`;
-        if (['POST', 'PUT'].includes(obj.method)) {
-          str += `,\n${space}isFormData: ${obj.isFormData}`;
-        }
-        if (obj.parameters.length === 1 && ['string', 'number'].includes(obj.parameters[0].type)) {
-          str += `,\n${space}requestData(${obj.parameters[0].name}: ${obj.parameters[0].type}) {
-${space}  return this.r({${obj.parameters[0].name}});
-${space}}`;
-        }
-        str += `\n${' '.repeat(2 * (level - 1))}}`;
-      } else {
-        str += `${space}${keys.map(key => {
-          const value = obj[key];
-          if (typeof value === 'object') {
-            return key + ': ' + toString(value, level + 1);
-          } else if (['number', 'boolean'].includes(typeof value)) {
-            return `${key}: ${value}`;
-          } else {
-            return `${key}: '${value}'`;
-          }
-        }).join(',\n' + space)}`;
-        if (level > 0) {
-          str += `\n${' '.repeat(2 * (level - 1))}}`;
-        } else {
-          str += `\n${space}}`;
-
+          });
         }
       }
     }
-    return str;
+    return interfaces;
   }
 
   /**
@@ -405,25 +357,22 @@ ${space}}`;
   }
 }
 
-
-export interface ApiConfig {
-  apiRoot: string;
-  // 类型定义
-  configs: Config[];
-  typeRoot: string;
-}
-
-interface Config {
-  excludes: RegExp[];
-  includes: RegExp[];
-  typeParameterReflects: Array<{
-    name: string;
-    typeProperties: string[];
-  }>;
-  url: string;
-}
-
-interface ApiDefinitionsResult {
+export interface ApiDefinitionsResult {
   apiObject: {}
   apis: Api[];
+}
+
+export interface APIData {
+  apiInterfaces: APIInterface[];
+  apiObject: object;
+  config: ApiConfig;
+  generatedApisBody: string;
+  imports: ImportDeclaration[];
+  interfaces: Interface[];
+  types: Type[];
+}
+
+export interface APIInterface {
+  body: string;
+  name: string;
 }
