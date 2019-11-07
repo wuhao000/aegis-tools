@@ -56,14 +56,6 @@ interface GeneratedApis<T> {
 	v5: V5API<T>;
 }
 
-export interface DefinitionPathAPI<T> {}
-
-export interface AdminDefinitionPathAPI<T> {}
-
-export interface UserDefinitionPathAPI<T> {
-_0: 'admin';
-}
-
 export interface AdminUserAPI<T> {
   /**
    * 获取列表
@@ -73,12 +65,6 @@ export interface AdminUserAPI<T> {
 
 export interface AdminAPI<T> {
 	user: AdminUserAPI<T>;
-}
-
-export interface AiDefinitionPathAPI<T> {}
-
-export interface XiaoeDefinitionPathAPI<T> {
-_0: 'ai';
 }
 
 export interface AiXiaoeAPI<T> {
@@ -92,12 +78,6 @@ export interface AiAPI<T> {
 	xiaoe: AiXiaoeAPI<T>;
 }
 
-export interface ApiDefinitionPathAPI<T> {}
-
-export interface AgentuserDefinitionPathAPI<T> {
-_0: 'api';
-}
-
 export interface ApiAgentuserAPI<T> {
   /**
    * 获取当前正在对话的访客信息，包含多种渠道来源的访客
@@ -105,19 +85,11 @@ export interface ApiAgentuserAPI<T> {
   list: GenericAPI<T, RestResult>;
 }
 
-export interface ChatmessageDefinitionPathAPI<T> {
-_0: 'api';
-}
-
 export interface ApiChatmessageAPI<T> {
   /**
    * 获取访客对话内容
    */
   list: GenericAPI<T, RestResult>;
-}
-
-export interface ContactsDefinitionPathAPI<T> {
-_0: 'api';
 }
 
 export interface ApiContactsAPI<T> {
@@ -135,15 +107,6 @@ export interface ApiContactsAPI<T> {
   delete: GenericAPI<T, RestResult>;
 }
 
-export interface LeavemsgDefinitionPathAPI<T> {
-_0: 'api';
-}
-
-export interface ListDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'leavemsg';
-}
-
 export interface LeavemsgListAPI<T> {
   /**
    * 获取留言列表
@@ -155,15 +118,6 @@ export interface ApiLeavemsgAPI<T> {
 	list: LeavemsgListAPI<T>;
 }
 
-export interface OnlineDefinitionPathAPI<T> {
-_0: 'api';
-}
-
-export interface OnlineUserDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'online';
-}
-
 export interface OnlineUserAPI<T> {
   /**
    * 获取在线客服
@@ -173,10 +127,6 @@ export interface OnlineUserAPI<T> {
 
 export interface ApiOnlineAPI<T> {
 	user: OnlineUserAPI<T>;
-}
-
-export interface OrganDefinitionPathAPI<T> {
-_0: 'api';
 }
 
 export interface ApiOrganAPI<T> {
@@ -194,19 +144,11 @@ export interface ApiOrganAPI<T> {
   delete: GenericAPI<T, RestResult>;
 }
 
-export interface QualityDefinitionPathAPI<T> {
-_0: 'api';
-}
-
 export interface ApiQualityAPI<T> {
   /**
    * 获取质检列表
    */
   list: GenericAPI<T, RestResult>;
-}
-
-export interface QuickreplyDefinitionPathAPI<T> {
-_0: 'api';
 }
 
 export interface ApiQuickreplyAPI<T> {
@@ -224,10 +166,6 @@ export interface ApiQuickreplyAPI<T> {
   delete: GenericAPI<T, RestResult>;
 }
 
-export interface QuicktypeDefinitionPathAPI<T> {
-_0: 'api';
-}
-
 export interface ApiQuicktypeAPI<T> {
   /**
    * 返回快捷回复分类
@@ -243,10 +181,6 @@ export interface ApiQuicktypeAPI<T> {
   delete: GenericAPI<T, RestResult>;
 }
 
-export interface ServicequeneDefinitionPathAPI<T> {
-_0: 'api';
-}
-
 export interface ApiServicequeneAPI<T> {
   /**
    * 获取队列统计信息，包含当前队列服务中的访客数，排队人数，坐席数
@@ -258,10 +192,6 @@ export interface ApiServicequeneAPI<T> {
   agentStatus: GenericAPI<T, RestResult>;
 }
 
-export interface SysdicDefinitionPathAPI<T> {
-_0: 'api';
-}
-
 export interface ApiSysdicAPI<T> {
   /**
    * 获取在线客服
@@ -269,19 +199,11 @@ export interface ApiSysdicAPI<T> {
   list: GenericAPI<T, RestResult>;
 }
 
-export interface TagsDefinitionPathAPI<T> {
-_0: 'api';
-}
-
 export interface ApiTagsAPI<T> {
   /**
    * 按照分类获取标签列表，Type 参数类型来自于 枚举，可选值目前有三个 ： user  workorders summary
    */
   list: GenericAPI<T, RestResult>;
-}
-
-export interface ApiUserDefinitionPathAPI<T> {
-_0: 'api';
 }
 
 export interface ApiUserAPI<T> {
@@ -299,15 +221,6 @@ export interface ApiUserAPI<T> {
   delete: GenericAPI<T, RestResult>;
 }
 
-export interface WebimDefinitionPathAPI<T> {
-_0: 'api';
-}
-
-export interface AgentDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
 export interface WebimAgentAPI<T> {
   /**
    * 获取在线客服会话历史消息
@@ -315,27 +228,11 @@ export interface WebimAgentAPI<T> {
   agent: GenericAPI<T, RestResult>;
 }
 
-export interface WebimAiDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
 export interface WebimAiAPI<T> {
   /**
    * 获取在线客服会话ID
    */
   session: GenericAPI<T, RestResult>;
-}
-
-export interface ChatDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
-export interface HisDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-_2: 'chat';
 }
 
 export interface ChatHisAPI<T> {
@@ -349,27 +246,11 @@ export interface WebimChatAPI<T> {
 	his: ChatHisAPI<T>;
 }
 
-export interface HotDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
 export interface WebimHotAPI<T> {
   /**
    * 获取推荐知识
    */
   hot: GenericAPI<T, RestResult>;
-}
-
-export interface ImageDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
-export interface UploadDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-_2: 'image';
 }
 
 export interface ImageUploadAPI<T> {
@@ -383,17 +264,6 @@ export interface WebimImageAPI<T> {
 	upload: ImageUploadAPI<T>;
 }
 
-export interface WebimLeavemsgDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
-export interface SaveDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-_2: 'leavemsg';
-}
-
 export interface LeavemsgSaveAPI<T> {
   /**
    * 保存留言功能
@@ -405,28 +275,11 @@ export interface WebimLeavemsgAPI<T> {
 	save: LeavemsgSaveAPI<T>;
 }
 
-export interface MessageDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
-export interface UnusefulDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-_2: 'message';
-}
-
 export interface MessageUnusefulAPI<T> {
   /**
    * 获取满意度调查
    */
   unuseful: GenericAPI<T, RestResult>;
-}
-
-export interface UsefulDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-_2: 'message';
 }
 
 export interface MessageUsefulAPI<T> {
@@ -441,27 +294,11 @@ export interface WebimMessageAPI<T> {
 	useful: MessageUsefulAPI<T>;
 }
 
-export interface QueryDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
 export interface WebimQueryAPI<T> {
   /**
    * 获取推荐知识
    */
   query: GenericAPI<T, RestResult>;
-}
-
-export interface SatisDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
-export interface SatisSaveDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-_2: 'satis';
 }
 
 export interface SatisSaveAPI<T> {
@@ -479,27 +316,11 @@ export interface WebimSatisAPI<T> {
 	save: SatisSaveAPI<T>;
 }
 
-export interface SessionDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
 export interface WebimSessionAPI<T> {
   /**
    * 获取在线客服会话ID
    */
   session: GenericAPI<T, RestResult>;
-}
-
-export interface SuggestDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-}
-
-export interface MobileDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
-_2: 'suggest';
 }
 
 export interface SuggestMobileAPI<T> {
@@ -511,11 +332,6 @@ export interface SuggestMobileAPI<T> {
 
 export interface WebimSuggestAPI<T> {
 	mobile: SuggestMobileAPI<T>;
-}
-
-export interface UrlDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'webim';
 }
 
 export interface WebimUrlAPI<T> {
@@ -548,25 +364,11 @@ export interface ApiWebimAPI<T> {
 	url: WebimUrlAPI<T>;
 }
 
-export interface WorkordersDefinitionPathAPI<T> {
-_0: 'api';
-}
-
-export interface AssignedDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'workorders';
-}
-
 export interface WorkordersAssignedAPI<T> {
   /**
    * 返回我的待办工单列表
    */
   list: GenericAPI<T, RestResult>;
-}
-
-export interface ClosedDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'workorders';
 }
 
 export interface WorkordersClosedAPI<T> {
@@ -576,21 +378,11 @@ export interface WorkordersClosedAPI<T> {
   list: GenericAPI<T, RestResult>;
 }
 
-export interface CommentDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'workorders';
-}
-
 export interface WorkordersCommentAPI<T> {
   /**
    * 回复工单
    */
   list: GenericAPI<T, RestResult>;
-}
-
-export interface WorkordersContactsDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'workorders';
 }
 
 export interface WorkordersContactsAPI<T> {
@@ -600,21 +392,11 @@ export interface WorkordersContactsAPI<T> {
   list: GenericAPI<T, RestResult>;
 }
 
-export interface DetailDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'workorders';
-}
-
 export interface WorkordersDetailAPI<T> {
   /**
    * 返回所有已关闭的工单列表
    */
   list: GenericAPI<T, RestResult>;
-}
-
-export interface FavoritesDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'workorders';
 }
 
 export interface WorkordersFavoritesAPI<T> {
@@ -624,21 +406,11 @@ export interface WorkordersFavoritesAPI<T> {
   list: GenericAPI<T, RestResult>;
 }
 
-export interface ProcessDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'workorders';
-}
-
 export interface WorkordersProcessAPI<T> {
   /**
    * 回复工单
    */
   list: GenericAPI<T, RestResult>;
-}
-
-export interface WorkitemDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'workorders';
 }
 
 export interface WorkordersWorkitemAPI<T> {
@@ -671,15 +443,6 @@ export interface ApiWorkordersAPI<T> {
 	workitem: WorkordersWorkitemAPI<T>;
 }
 
-export interface ApiXiaoeDefinitionPathAPI<T> {
-_0: 'api';
-}
-
-export interface CateDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'xiaoe';
-}
-
 export interface XiaoeCateAPI<T> {
   /**
    * 返回分类列表
@@ -693,17 +456,6 @@ export interface XiaoeCateAPI<T> {
    * 删除知识库分类
    */
   delete: GenericAPI<T, RestResult>;
-}
-
-export interface TopicDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'xiaoe';
-}
-
-export interface TopicDetailDefinitionPathAPI<T> {
-_0: 'api';
-_1: 'xiaoe';
-_2: 'topic';
 }
 
 export interface TopicDetailAPI<T> {
@@ -753,21 +505,11 @@ export interface ApiAPI<T> {
 	xiaoe: ApiXiaoeAPI<T>;
 }
 
-export interface ApiFakeDataDefinitionPathAPI<T> {}
-
-export interface AppointmentReviewListDefinitionPathAPI<T> {
-_0: 'apiFakeData';
-}
-
 export interface ApiFakeDataAppointmentReviewListAPI<T> {
   /**
    * 预约阅卷
    */
   appointmentReviewList: GenericAPI<T, any>;
-}
-
-export interface CaseQueryListDefinitionPathAPI<T> {
-_0: 'apiFakeData';
 }
 
 export interface ApiFakeDataCaseQueryListAPI<T> {
@@ -777,10 +519,6 @@ export interface ApiFakeDataCaseQueryListAPI<T> {
   caseQueryList: GenericAPI<T, any>;
 }
 
-export interface CaseReserveQueryListDefinitionPathAPI<T> {
-_0: 'apiFakeData';
-}
-
 export interface ApiFakeDataCaseReserveQueryListAPI<T> {
   /**
    * 预约立案
@@ -788,19 +526,11 @@ export interface ApiFakeDataCaseReserveQueryListAPI<T> {
   caseReserveQueryList: GenericAPI<T, any>;
 }
 
-export interface ExecutionInfoListDefinitionPathAPI<T> {
-_0: 'apiFakeData';
-}
-
 export interface ApiFakeDataExecutionInfoListAPI<T> {
   /**
    * 执行查询
    */
   executionInfo: GenericAPI<T, any>;
-}
-
-export interface LitigationConsultationDefinitionPathAPI<T> {
-_0: 'apiFakeData';
 }
 
 export interface ApiFakeDataLitigationConsultationAPI<T> {
@@ -818,27 +548,11 @@ export interface ApiFakeDataAPI<T> {
 	litigationConsultation: ApiFakeDataLitigationConsultationAPI<T>;
 }
 
-export interface AppsDefinitionPathAPI<T> {}
-
-export interface AppsContactsDefinitionPathAPI<T> {
-_0: 'apps';
-}
-
-export interface ByMobileDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
-}
-
 export interface ContactsByMobileAPI<T> {
   /**
    * 根据手机号码获取联系人详情
    */
   getByMobile: StringIdAPI<T, Contacts[]>;
-}
-
-export interface CallerDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
 }
 
 export interface ContactsCallerAPI<T> {
@@ -848,21 +562,11 @@ export interface ContactsCallerAPI<T> {
   saveContacts: GenericAPI<T, Contacts>;
 }
 
-export interface CheckIdentityDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
-}
-
 export interface ContactsCheckIdentityAPI<T> {
   /**
    * 1.对身份证进行校验   2.通过身份证号获取性别   3.通过身份证号获取地址（省）
    */
   checkIdentity: StringIdAPI<T, string>;
-}
-
-export interface FindPartyByContactsIdDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
 }
 
 export interface ContactsFindPartyByContactsIdAPI<T> {
@@ -872,21 +576,11 @@ export interface ContactsFindPartyByContactsIdAPI<T> {
   findPartyByContactsId: StringIdAPI<T>;
 }
 
-export interface FindPartyByPartyIdDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
-}
-
 export interface ContactsFindPartyByPartyIdAPI<T> {
   /**
    * 根据当事人的id查询当事人详情，用于前端当事人的联动
    */
   findPartyByPartyId: StringIdAPI<T, Party>;
-}
-
-export interface FindPartyExistOrNotExistDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
 }
 
 export interface ContactsFindPartyExistOrNotExistAPI<T> {
@@ -896,11 +590,6 @@ export interface ContactsFindPartyExistOrNotExistAPI<T> {
   findPartyExistOrNotExist: GenericAPI<T, Party>;
 }
 
-export interface GetUUIDDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
-}
-
 export interface ContactsGetUUIDAPI<T> {
   /**
    * getUUID
@@ -908,21 +597,11 @@ export interface ContactsGetUUIDAPI<T> {
   getUUID: GenericAPI<T>;
 }
 
-export interface PartyDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
-}
-
 export interface ContactsPartyAPI<T> {
   /**
    * 保存当事人信息,使用来电人的id与当事人信息进行关联，以及校验当前来电人下当事人是否重复
    */
   saveParty: GenericAPI<T, Party>;
-}
-
-export interface UuidDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'contacts';
 }
 
 export interface ContactsUuidAPI<T> {
@@ -948,28 +627,11 @@ export interface AppsContactsAPI<T> {
   get: StringIdAPI<T, Contacts>;
 }
 
-export interface _12368DefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-}
-
-export interface IndexDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-}
-
 export interface _12368IndexAPI<T> {
   /**
    * getIndexPage
    */
   getIndexPage: GenericAPI<T, ModelAndView>;
-}
-
-export interface _12368ListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
 }
 
 export interface _12368ListAPI<T> {
@@ -979,23 +641,11 @@ export interface _12368ListAPI<T> {
   getList: GenericAPI<T, SimplePage<NewWorkOrder>>;
 }
 
-export interface MyQualifiedListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-}
-
 export interface _12368MyQualifiedListAPI<T> {
   /**
    * getMyQualityList
    */
   getMyQualityList: GenericAPI<T, ModelAndView>;
-}
-
-export interface MyQualityListMonitorDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
 }
 
 export interface _12368MyQualityListMonitorAPI<T> {
@@ -1005,30 +655,11 @@ export interface _12368MyQualityListMonitorAPI<T> {
   getFinishedQualityListMonitor: GenericAPI<T, ModelAndView>;
 }
 
-export interface MyQualityListNormalDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-}
-
 export interface _12368MyQualityListNormalAPI<T> {
   /**
    * getFinishedQualityList
    */
   getFinishedQualityList: GenericAPI<T, ModelAndView>;
-}
-
-export interface ObjectionHandleDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-}
-
-export interface ObjectionHandleListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-_3: 'objectionHandle';
 }
 
 export interface ObjectionHandleListAPI<T> {
@@ -1038,13 +669,6 @@ export interface ObjectionHandleListAPI<T> {
   getObjectionList: GenericAPI<T, SimplePage<NewWorkOrder>>;
 }
 
-export interface ObjectionDetailDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-_3: 'objectionHandle';
-}
-
 export interface ObjectionHandleObjectionDetailAPI<T> {
   /**
    * 获取异议详细信息页面
@@ -1052,25 +676,11 @@ export interface ObjectionHandleObjectionDetailAPI<T> {
   getObjectionDetailPage: GenericAPI<T, ModelAndView>;
 }
 
-export interface AddDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-_3: 'objectionHandle';
-}
-
 export interface ObjectionHandleAddAPI<T> {
   /**
    * 新增异议
    */
   addObjection: StringIdAPI<T, string>;
-}
-
-export interface HandleDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-_3: 'objectionHandle';
 }
 
 export interface ObjectionHandleHandleAPI<T> {
@@ -1091,23 +701,11 @@ export interface _12368ObjectionHandleAPI<T> {
 	handle: ObjectionHandleHandleAPI<T>;
 }
 
-export interface QualityDetailDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-}
-
 export interface _12368QualityDetailAPI<T> {
   /**
    * getQualityDetailPage
    */
   getQualityDetailPage: GenericAPI<T, ModelAndView>;
-}
-
-export interface StartQualityDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
 }
 
 export interface _12368StartQualityAPI<T> {
@@ -1117,12 +715,6 @@ export interface _12368StartQualityAPI<T> {
   getStartQualityPage: GenericAPI<T, ModelAndView>;
 }
 
-export interface StartQualityListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-}
-
 export interface _12368StartQualityListAPI<T> {
   /**
    * getStartQualityList
@@ -1130,31 +722,11 @@ export interface _12368StartQualityListAPI<T> {
   getStartQualityList: GenericAPI<T, ModelAndView>;
 }
 
-export interface TaskDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-}
-
-export interface TeamDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-_3: 'task';
-}
-
 export interface TaskTeamAPI<T> {
   /**
    * getTeamTask
    */
   getTeamTask: GenericAPI<T, ModelAndView>;
-}
-
-export interface TotalDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: '12368';
-_3: 'task';
 }
 
 export interface TaskTotalAPI<T> {
@@ -1202,35 +774,11 @@ export interface Qc12368API<T> {
   delWorkOrder: StringIdAPI<T, string>;
 }
 
-export interface QcDefinitionPathAPI<T> {
-_0: 'apps';
-}
-
-export interface Group12368DefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-}
-
-export interface _12368AddDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-_3: '12368';
-}
-
 export interface _12368AddAPI<T> {
   /**
    * 新增质检小组
    */
   add: GenericAPI<T>;
-}
-
-export interface AllDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-_3: '12368';
 }
 
 export interface _12368AllAPI<T> {
@@ -1240,25 +788,11 @@ export interface _12368AllAPI<T> {
   getAll: GenericAPI<T, QualityGroup[]>;
 }
 
-export interface DeleteDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-_3: '12368';
-}
-
 export interface _12368DeleteAPI<T> {
   /**
    * 删除质检小组
    */
   delete: StringIdAPI<T>;
-}
-
-export interface GetDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-_3: '12368';
 }
 
 export interface _12368GetAPI<T> {
@@ -1268,25 +802,11 @@ export interface _12368GetAPI<T> {
   getOne: StringIdAPI<T>;
 }
 
-export interface Group12368ListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-_3: '12368';
-}
-
 export interface Group12368ListAPI<T> {
   /**
    * 质检小组与任务列表
    */
   getAll: GenericAPI<T, SimplePage<QualityGroup>>;
-}
-
-export interface MineDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-_3: '12368';
 }
 
 export interface _12368MineAPI<T> {
@@ -1296,25 +816,11 @@ export interface _12368MineAPI<T> {
   getMyGroups: GenericAPI<T, QualityGroup[]>;
 }
 
-export interface UpdateDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-_3: '12368';
-}
-
 export interface _12368UpdateAPI<T> {
   /**
    * 编辑质检小组
    */
   update: GenericAPI<T>;
-}
-
-export interface UserlistDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'group';
-_3: '12368';
 }
 
 export interface _12368UserlistAPI<T> {
@@ -1335,26 +841,8 @@ export interface Group12368API<T> {
 	userlist: _12368UserlistAPI<T>;
 }
 
-export interface GroupDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-}
-
 export interface QcGroupAPI<T> {
 	_12368: Group12368API<T>;
-}
-
-export interface Score12368DefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'score';
-}
-
-export interface _12368GetDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'score';
-_3: '12368';
 }
 
 export interface Score12368GetAPI<T> {
@@ -1364,25 +852,11 @@ export interface Score12368GetAPI<T> {
   getOne: StringIdAPI<T>;
 }
 
-export interface Score12368ListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'score';
-_3: '12368';
-}
-
 export interface Score12368ListAPI<T> {
   /**
    * 查询评分标准列表
    */
   getAll: GenericAPI<T>;
-}
-
-export interface _12368SaveDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-_2: 'score';
-_3: '12368';
 }
 
 export interface _12368SaveAPI<T> {
@@ -1398,11 +872,6 @@ export interface Score12368API<T> {
 	save: _12368SaveAPI<T>;
 }
 
-export interface ScoreDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'qc';
-}
-
 export interface QcScoreAPI<T> {
 	_12368: Score12368API<T>;
 }
@@ -1411,32 +880,6 @@ export interface AppsQcAPI<T> {
 	_12368: Qc12368API<T>;
 	group: QcGroupAPI<T>;
 	score: QcScoreAPI<T>;
-}
-
-export interface Workorders12368DefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-}
-
-export interface _12368AppsDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
-export interface BusinessDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'apps';
-}
-
-export interface WorkOrdersListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'apps';
-_4: 'business';
 }
 
 export interface BusinessWorkOrdersListAPI<T> {
@@ -1454,31 +897,11 @@ export interface _12368AppsAPI<T> {
 	business: AppsBusinessAPI<T>;
 }
 
-export interface ConsultDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
-export interface ConsultListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'consult';
-}
-
 export interface ConsultListAPI<T> {
   /**
    * 查看工单诉讼咨询列表
    */
   getConsultList: GenericAPI<T, any>;
-}
-
-export interface ConsultSaveDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'consult';
 }
 
 export interface ConsultSaveAPI<T> {
@@ -1497,23 +920,11 @@ export interface _12368ConsultAPI<T> {
   getConsultListByConsistenceId: StringIdAPI<T, any>;
 }
 
-export interface ConsultdataDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
 export interface _12368ConsultdataAPI<T> {
   /**
    * 删除诉讼咨询列表
    */
   deleteConsultData: GenericAPI<T, any>;
-}
-
-export interface _12368DetailDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
 }
 
 export interface _12368DetailAPI<T> {
@@ -1523,31 +934,11 @@ export interface _12368DetailAPI<T> {
   getDetailPage: GenericAPI<T, ModelAndView>;
 }
 
-export interface ExtraDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
-export interface BatchDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'extra';
-}
-
 export interface ExtraBatchAPI<T> {
   /**
    * 批量保存报告
    */
   batchSaveExtraData: GenericAPI<T, any, Array<any>>;
-}
-
-export interface ExtraSaveDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'extra';
 }
 
 export interface ExtraSaveAPI<T> {
@@ -1566,23 +957,11 @@ export interface _12368ExtraAPI<T> {
   deleteExtraData: GenericAPI<T, string>;
 }
 
-export interface FavDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
 export interface _12368FavAPI<T> {
   /**
    * 收藏工单或取消收藏工单
    */
   favorite: StringIdAPI<T, any>;
-}
-
-export interface HistoryDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
 }
 
 export interface _12368HistoryAPI<T> {
@@ -1592,23 +971,11 @@ export interface _12368HistoryAPI<T> {
   getHistoryPage: GenericAPI<T, ModelAndView>;
 }
 
-export interface Workorders12368ListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
 export interface Workorders12368ListAPI<T> {
   /**
    * 分页查询工单列表
    */
   getList: GenericAPI<T, SimplePage<NewWorkOrder>>;
-}
-
-export interface MyordersDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
 }
 
 export interface _12368MyordersAPI<T> {
@@ -1618,30 +985,11 @@ export interface _12368MyordersAPI<T> {
   getMyOrdersPage: GenericAPI<T, ModelAndView>;
 }
 
-export interface PartiesDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
 export interface _12368PartiesAPI<T> {
   /**
    * 获取当事人
    */
   getParties: StringIdAPI<T, string[]>;
-}
-
-export interface PhoneDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
-export interface MarkDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'phone';
 }
 
 export interface PhoneMarkAPI<T> {
@@ -1655,30 +1003,11 @@ export interface _12368PhoneAPI<T> {
 	mark: PhoneMarkAPI<T>;
 }
 
-export interface PhonemarkDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
 export interface _12368PhonemarkAPI<T> {
   /**
    * 根据id获取工单的来电类型
    */
   getPhoneMark: StringIdAPI<T, string>;
-}
-
-export interface ReportDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
-export interface ReportAddDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
 }
 
 export interface ReportAddAPI<T> {
@@ -1688,25 +1017,11 @@ export interface ReportAddAPI<T> {
   getReportAddPage: GenericAPI<T, ModelAndView>;
 }
 
-export interface ConfirmDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
-}
-
 export interface ReportConfirmAPI<T> {
   /**
    * 确认办结接口
    */
   confirmSuccess: StringIdAPI<T, string>;
-}
-
-export interface ReportDetailDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
 }
 
 export interface ReportDetailAPI<T> {
@@ -1716,25 +1031,11 @@ export interface ReportDetailAPI<T> {
   getReportDetailPage: GenericAPI<T, ModelAndView>;
 }
 
-export interface GetMsgDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
-}
-
 export interface ReportGetMsgAPI<T> {
   /**
    * 获取消息列表
    */
   getWorkOrdersMsg: StringIdAPI<T, WorkordersMessage[]>;
-}
-
-export interface ReportHistoryDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
 }
 
 export interface ReportHistoryAPI<T> {
@@ -1744,25 +1045,11 @@ export interface ReportHistoryAPI<T> {
   getChangeHistory: StringIdAPI<T, Pair<WorkOrders, DataEvent[]>>;
 }
 
-export interface JudgementDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
-}
-
 export interface ReportJudgementAPI<T> {
   /**
    * 判断是否进行过提醒
    */
   judgeRemind: StringIdAPI<T, number>;
-}
-
-export interface ReportListDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
 }
 
 export interface ReportListAPI<T> {
@@ -1772,25 +1059,11 @@ export interface ReportListAPI<T> {
   getReportList: GenericAPI<T, SimplePage<WorkOrdersExtra>>;
 }
 
-export interface ManualDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
-}
-
 export interface ReportManualAPI<T> {
   /**
    * 手动提醒办理
    */
   manualSend: GenericAPI<T>;
-}
-
-export interface MyReportWorkOrdersDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
 }
 
 export interface ReportMyReportWorkOrdersAPI<T> {
@@ -1800,25 +1073,11 @@ export interface ReportMyReportWorkOrdersAPI<T> {
   workOrdersList: GenericAPI<T, SimplePage<WorkOrdersExtra>>;
 }
 
-export interface RevertDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
-}
-
 export interface ReportRevertAPI<T> {
   /**
    * 撤回工单报告
    */
   revertReport: StringIdAPI<T, string>;
-}
-
-export interface SendDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'report';
 }
 
 export interface ReportSendAPI<T> {
@@ -1862,12 +1121,6 @@ export interface _12368ReportAPI<T> {
   delReport: StringIdAPI<T, string>;
 }
 
-export interface TodayWorkOrdersDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
 export interface _12368TodayWorkOrdersAPI<T> {
   /**
    * 今日工单
@@ -1875,31 +1128,11 @@ export interface _12368TodayWorkOrdersAPI<T> {
   getTotalWorkOrders: GenericAPI<T, SimplePage<NewWorkOrder>>;
 }
 
-export interface _12368UserDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-}
-
-export interface CoOrganizerDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'user';
-}
-
 export interface UserCoOrganizerAPI<T> {
   /**
    * 获取协办人列表
    */
   getOrganizer: GenericAPI<T, Array<{[key: string]: string}>>;
-}
-
-export interface DeptDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'user';
 }
 
 export interface UserDeptAPI<T> {
@@ -1913,13 +1146,6 @@ export interface UserDeptAPI<T> {
   getDept: StringIdAPI<T, Organ>;
 }
 
-export interface DeptCascadeDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'user';
-}
-
 export interface UserDeptCascadeAPI<T> {
   /**
    * 查询组织
@@ -1927,25 +1153,11 @@ export interface UserDeptCascadeAPI<T> {
   getDeptCascade: StringIdAPI<T, Organ[]>;
 }
 
-export interface JudgeDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'user';
-}
-
 export interface UserJudgeAPI<T> {
   /**
    * 查询部门所属人员
    */
   getJudge: StringIdAPI<T, User[]>;
-}
-
-export interface NextDefinitionPathAPI<T> {
-_0: 'apps';
-_1: 'workorders';
-_2: '12368';
-_3: 'user';
 }
 
 export interface UserNextAPI<T> {
@@ -2005,10 +1217,6 @@ export interface Workorders12368API<T> {
   delete: StringIdAPI<T, string>;
 }
 
-export interface AppsWorkordersDefinitionPathAPI<T> {
-_0: 'apps';
-}
-
 export interface AppsWorkordersAPI<T> {
 	_12368: Workorders12368API<T>;
 }
@@ -2019,19 +1227,11 @@ export interface AppsAPI<T> {
 	workorders: AppsWorkordersAPI<T>;
 }
 
-export interface CurrentUserDefinitionPathAPI<T> {}
-
 export interface CurrentUserAPI<T> {
   /**
    * 获取当前用户信息
    */
   index: GenericAPI<T, CurrentUserVO>;
-}
-
-export interface QueryCenterDefinitionPathAPI<T> {}
-
-export interface CaseDetailDefinitionPathAPI<T> {
-_0: 'queryCenter';
 }
 
 export interface QueryCenterCaseDetailAPI<T> {
@@ -2041,19 +1241,11 @@ export interface QueryCenterCaseDetailAPI<T> {
   caseDetail: GenericAPI<T>;
 }
 
-export interface CaseListDefinitionPathAPI<T> {
-_0: 'queryCenter';
-}
-
 export interface QueryCenterCaseListAPI<T> {
   /**
    * 最高院案件查询列表页
    */
   caseList: StringIdAPI<T, any>;
-}
-
-export interface CaseQueryDetailDefinitionPathAPI<T> {
-_0: 'queryCenter';
 }
 
 export interface QueryCenterCaseQueryDetailAPI<T> {
@@ -2063,19 +1255,11 @@ export interface QueryCenterCaseQueryDetailAPI<T> {
   caseQueryDetail: GenericAPI<T>;
 }
 
-export interface CaseQueryDetailNationalDefinitionPathAPI<T> {
-_0: 'queryCenter';
-}
-
 export interface QueryCenterCaseQueryDetailNationalAPI<T> {
   /**
    * 全国案件查询
    */
   caseQueryDetailNational: GenericAPI<T>;
-}
-
-export interface CaseReserveByCbhDefinitionPathAPI<T> {
-_0: 'queryCenter';
 }
 
 export interface QueryCenterCaseReserveByCbhAPI<T> {
@@ -2085,19 +1269,11 @@ export interface QueryCenterCaseReserveByCbhAPI<T> {
   caseReserveByCbh: GenericAPI<T, any>;
 }
 
-export interface CaseReserveDetailDefinitionPathAPI<T> {
-_0: 'queryCenter';
-}
-
 export interface QueryCenterCaseReserveDetailAPI<T> {
   /**
    * 立案预约
    */
   caseReserveDetail: GenericAPI<T>;
-}
-
-export interface ClearCacheDefinitionPathAPI<T> {
-_0: 'queryCenter';
 }
 
 export interface QueryCenterClearCacheAPI<T> {
@@ -2107,19 +1283,11 @@ export interface QueryCenterClearCacheAPI<T> {
   clearCache: GenericAPI<T>;
 }
 
-export interface ExecutionInfoDefinitionPathAPI<T> {
-_0: 'queryCenter';
-}
-
 export interface QueryCenterExecutionInfoAPI<T> {
   /**
    * 执行查询
    */
   executionInfo: GenericAPI<T>;
-}
-
-export interface LetterAndVisitDetailDefinitionPathAPI<T> {
-_0: 'queryCenter';
 }
 
 export interface QueryCenterLetterAndVisitDetailAPI<T> {
@@ -2129,10 +1297,6 @@ export interface QueryCenterLetterAndVisitDetailAPI<T> {
   letterAndVisitDetail: GenericAPI<T>;
 }
 
-export interface LetterAndVisitListDefinitionPathAPI<T> {
-_0: 'queryCenter';
-}
-
 export interface QueryCenterLetterAndVisitListAPI<T> {
   /**
    * 信访查询列表
@@ -2140,25 +1304,11 @@ export interface QueryCenterLetterAndVisitListAPI<T> {
   letterAndVisitList: GenericAPI<T>;
 }
 
-export interface LimiterDefinitionPathAPI<T> {
-_0: 'queryCenter';
-}
-
-export interface LogDefinitionPathAPI<T> {
-_0: 'queryCenter';
-_1: 'limiter';
-}
-
 export interface LimiterLogAPI<T> {
   /**
    * getLimiterLogs
    */
   getLimiterLogs: GenericAPI<T>;
-}
-
-export interface SettingsDefinitionPathAPI<T> {
-_0: 'queryCenter';
-_1: 'limiter';
 }
 
 export interface LimiterSettingsAPI<T> {
@@ -2177,19 +1327,11 @@ export interface QueryCenterLimiterAPI<T> {
   editMaxRequestCount: GenericAPI<T>;
 }
 
-export interface QueryCenterFileDefinitionPathAPI<T> {
-_0: 'queryCenter';
-}
-
 export interface QueryCenterQueryCenterFileAPI<T> {
   /**
    * reservationLoanFile
    */
   reservationLoanFile: StringIdAPI<T>;
-}
-
-export interface ReservationLoanDefinitionPathAPI<T> {
-_0: 'queryCenter';
 }
 
 export interface QueryCenterReservationLoanAPI<T> {
@@ -2215,17 +1357,6 @@ export interface QueryCenterAPI<T> {
 	reservationLoan: QueryCenterReservationLoanAPI<T>;
 }
 
-export interface RestDefinitionPathAPI<T> {}
-
-export interface CallDefinitionPathAPI<T> {
-_0: 'rest';
-}
-
-export interface MonitorDefinitionPathAPI<T> {
-_0: 'rest';
-_1: 'call';
-}
-
 export interface CallMonitorAPI<T> {
   /**
    * 监控语音网关状态
@@ -2237,25 +1368,11 @@ export interface RestCallAPI<T> {
 	monitor: CallMonitorAPI<T>;
 }
 
-export interface RestWebimDefinitionPathAPI<T> {
-_0: 'rest';
-}
-
-export interface WebimAgentDefinitionPathAPI<T> {
-_0: 'rest';
-_1: 'webim';
-}
-
 export interface RestWebimAgentAPI<T> {
   /**
    * 获取在线客服会话历史消息
    */
   agent: GenericAPI<T, RestResult>;
-}
-
-export interface HostDefinitionPathAPI<T> {
-_0: 'rest';
-_1: 'webim';
 }
 
 export interface WebimHostAPI<T> {
@@ -2265,28 +1382,11 @@ export interface WebimHostAPI<T> {
   host: GenericAPI<T>;
 }
 
-export interface WebimMessageDefinitionPathAPI<T> {
-_0: 'rest';
-_1: 'webim';
-}
-
-export interface MessageUnusefulDefinitionPathAPI<T> {
-_0: 'rest';
-_1: 'webim';
-_2: 'message';
-}
-
 export interface WebimMessageUnusefulAPI<T> {
   /**
    * 获取满意度调查
    */
   unuseful: GenericAPI<T, RestResult>;
-}
-
-export interface MessageUsefulDefinitionPathAPI<T> {
-_0: 'rest';
-_1: 'webim';
-_2: 'message';
 }
 
 export interface WebimMessageUsefulAPI<T> {
@@ -2312,19 +1412,11 @@ export interface RestAPI<T> {
 	webim: RestWebimAPI<T>;
 }
 
-export interface SessionDefinitionPathAPI<T> {}
-
 export interface SessionAPI<T> {
   /**
    * 登录服务，传入登录账号和密码
    */
   session: GenericAPI<T>;
-}
-
-export interface TokensDefinitionPathAPI<T> {}
-
-export interface ErrorDefinitionPathAPI<T> {
-_0: 'tokens';
 }
 
 export interface TokensErrorAPI<T> {
@@ -2350,38 +1442,6 @@ export interface TokensAPI<T> {
 	error: TokensErrorAPI<T>;
 }
 
-export interface V5DefinitionPathAPI<T> {}
-
-export interface V5ApiDefinitionPathAPI<T> {
-_0: 'v5';
-}
-
-export interface ApiAppsDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-}
-
-export interface CallcenterDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-}
-
-export interface ExtentionDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'callcenter';
-}
-
-export interface ExtentionDetailDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'callcenter';
-_4: 'extention';
-}
-
 export interface ExtentionDetailAPI<T> {
   /**
    * 分机登录接口
@@ -2395,19 +1455,6 @@ export interface CallcenterExtentionAPI<T> {
 
 export interface AppsCallcenterAPI<T> {
 	extention: CallcenterExtentionAPI<T>;
-}
-
-export interface OrganizationDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-}
-
-export interface OrganizationListDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'organization';
 }
 
 export interface OrganizationListAPI<T> {
@@ -2437,39 +1484,11 @@ export interface AppsOrganizationAPI<T> {
   delete: StringIdAPI<T, any>;
 }
 
-export interface ApiAppsWorkordersDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-}
-
-export interface WorkordersAddDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
 export interface WorkordersAddAPI<T> {
   /**
    * 查询新建工单基础数据
    */
   add: GenericAPI<T, {[key: string]: any}>;
-}
-
-export interface WorkordersClosedDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface ClosedSaveDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'closed';
 }
 
 export interface ClosedSaveAPI<T> {
@@ -2487,13 +1506,6 @@ export interface AppsWorkordersClosedAPI<T> {
 	save: ClosedSaveAPI<T>;
 }
 
-export interface CommentsDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
 export interface WorkordersCommentsAPI<T> {
   /**
    * 获取工单评论
@@ -2501,33 +1513,11 @@ export interface WorkordersCommentsAPI<T> {
   comments: GenericAPI<T, {[key: string]: any}>;
 }
 
-export interface CountDataDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
 export interface WorkordersCountDataAPI<T> {
   /**
    * 获取工单数量统计数据
    */
   countData: GenericAPI<T, CountData>;
-}
-
-export interface WorkordersDeptDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface DeptUserDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'dept';
 }
 
 export interface DeptUserAPI<T> {
@@ -2541,34 +1531,11 @@ export interface WorkordersDeptAPI<T> {
 	user: DeptUserAPI<T>;
 }
 
-export interface WorkordersDetailDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface DetailCommentsDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'detail';
-}
-
 export interface DetailCommentsAPI<T> {
   /**
    * 获取工单详细评论
    */
   detailComments: GenericAPI<T, ModelAndView>;
-}
-
-export interface DataeventDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'detail';
 }
 
 export interface DetailDataeventAPI<T> {
@@ -2587,13 +1554,6 @@ export interface AppsWorkordersDetailAPI<T> {
   detail: StringIdAPI<T, {[key: string]: any}>;
 }
 
-export interface EditDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
 export interface WorkordersEditAPI<T> {
   /**
    * edit
@@ -2601,34 +1561,11 @@ export interface WorkordersEditAPI<T> {
   edit: GenericAPI<T, ModelAndView>;
 }
 
-export interface EmbedDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface EmbedAddDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'embed';
-}
-
 export interface EmbedAddAPI<T> {
   /**
    * embedadd
    */
   embedadd: GenericAPI<T, ModelAndView>;
-}
-
-export interface EmbedSaveDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'embed';
 }
 
 export interface EmbedSaveAPI<T> {
@@ -2641,30 +1578,6 @@ export interface EmbedSaveAPI<T> {
 export interface WorkordersEmbedAPI<T> {
 	add: EmbedAddAPI<T>;
 	save: EmbedSaveAPI<T>;
-}
-
-export interface WorkordersExtraDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface FieldDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'extra';
-}
-
-export interface ByTypeDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'extra';
-_5: 'field';
 }
 
 export interface FieldByTypeAPI<T> {
@@ -2682,21 +1595,6 @@ export interface WorkordersExtraAPI<T> {
 	field: ExtraFieldAPI<T>;
 }
 
-export interface WorkordersFavDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface OrderDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'fav';
-}
-
 export interface FavOrderAPI<T> {
   /**
    * favorder
@@ -2706,21 +1604,6 @@ export interface FavOrderAPI<T> {
 
 export interface WorkordersFavAPI<T> {
 	order: FavOrderAPI<T>;
-}
-
-export interface WorkordersFavoritesDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface FavoritesSaveDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'favorites';
 }
 
 export interface FavoritesSaveAPI<T> {
@@ -2738,21 +1621,6 @@ export interface AppsWorkordersFavoritesAPI<T> {
 	save: FavoritesSaveAPI<T>;
 }
 
-export interface FilesDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface FilesDeleteDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'files';
-}
-
 export interface FilesDeleteAPI<T> {
   /**
    * filesdelete
@@ -2764,33 +1632,11 @@ export interface WorkordersFilesAPI<T> {
 	delete: FilesDeleteAPI<T>;
 }
 
-export interface WorkordersIndexDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
 export interface WorkordersIndexAPI<T> {
   /**
    * index
    */
   index: GenericAPI<T, ModelAndView>;
-}
-
-export interface WorkordersMyordersDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface MyordersSaveDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'myorders';
 }
 
 export interface MyordersSaveAPI<T> {
@@ -2808,21 +1654,6 @@ export interface WorkordersMyordersAPI<T> {
 	save: MyordersSaveAPI<T>;
 }
 
-export interface NotassignedDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface NotassignedProcessDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'notassigned';
-}
-
 export interface NotassignedProcessAPI<T> {
   /**
    * notassignedprocess
@@ -2838,13 +1669,6 @@ export interface WorkordersNotassignedAPI<T> {
 	process: NotassignedProcessAPI<T>;
 }
 
-export interface PagesDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
 export interface WorkordersPagesAPI<T> {
   /**
    * pages
@@ -2852,33 +1676,11 @@ export interface WorkordersPagesAPI<T> {
   pages: GenericAPI<T, ModelAndView>;
 }
 
-export interface WorkordersSaveDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
 export interface WorkordersSaveAPI<T> {
   /**
    * save
    */
   save: GenericAPI<T, ModelAndView>;
-}
-
-export interface WorkordersUpdateDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface UpdateAllDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'update';
 }
 
 export interface UpdateAllAPI<T> {
@@ -2892,33 +1694,11 @@ export interface WorkordersUpdateAPI<T> {
 	all: UpdateAllAPI<T>;
 }
 
-export interface WorkordersUploadDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
 export interface WorkordersUploadAPI<T> {
   /**
    * upload
    */
   upload: GenericAPI<T, ModelAndView>;
-}
-
-export interface WorkflowDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface ApprovalDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'workflow';
 }
 
 export interface WorkflowApprovalAPI<T> {
@@ -2928,14 +1708,6 @@ export interface WorkflowApprovalAPI<T> {
   workflowapproval: GenericAPI<T, ModelAndView>;
 }
 
-export interface WorkflowDetailDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'workflow';
-}
-
 export interface WorkflowDetailAPI<T> {
   /**
    * workflowdetail
@@ -2943,27 +1715,11 @@ export interface WorkflowDetailAPI<T> {
   workflowdetail: GenericAPI<T, {[key: string]: any}>;
 }
 
-export interface WorkflowProcessDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'workflow';
-}
-
 export interface WorkflowProcessAPI<T> {
   /**
    * workflowprocess
    */
   workflowprocess: GenericAPI<T, ModelAndView>;
-}
-
-export interface WorkflowSaveDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'workflow';
 }
 
 export interface WorkflowSaveAPI<T> {
@@ -2982,21 +1738,6 @@ export interface WorkordersWorkflowAPI<T> {
 	detail: WorkflowDetailAPI<T>;
 	process: WorkflowProcessAPI<T>;
 	save: WorkflowSaveAPI<T>;
-}
-
-export interface WorkordersWorkitemDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-}
-
-export interface WorkitemProcessDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'apps';
-_3: 'workorders';
-_4: 'workitem';
 }
 
 export interface WorkitemProcessAPI<T> {
@@ -3048,28 +1789,11 @@ export interface ApiAppsAPI<T> {
 	workorders: ApiAppsWorkordersAPI<T>;
 }
 
-export interface ApiSysdicDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-}
-
-export interface SysdicByTypeDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'sysdic';
-}
-
 export interface SysdicByTypeAPI<T> {
   /**
    * 根据字典编码获取字典数据
    */
   byType: StringIdAPI<T, SysDic[]>;
-}
-
-export interface ByTypesDefinitionPathAPI<T> {
-_0: 'v5';
-_1: 'api';
-_2: 'sysdic';
 }
 
 export interface SysdicByTypesAPI<T> {

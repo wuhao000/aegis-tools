@@ -141,6 +141,9 @@ export function generateData(config: ApiConfig, datas: Array<{
         const keys = Object.keys(obj);
         if (keys.length) {
           keys.forEach(key => {
+            if (key === 'definitionPath') {
+              return;
+            }
             const value = obj[key];
             if (typeof value === 'object') {
               if (value.method && value.url) {

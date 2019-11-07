@@ -1,4 +1,4 @@
-import {GeneratedApis} from '../types/api-definition';
+import {GeneratedApis} from '@/types/api-definition';
 import {ApiDef} from 'aegis-api-proxy';
 export default {
   admin: {
