@@ -2,46 +2,50 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8f1c6a6-2871-49d6-9351-f12ee0bfaddb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/definition.ts.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jest.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/__tests__/definition.test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/__tests__/generate-api.test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/__tests__/ref.test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/__tests__/utils.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/execute.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pascal.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tmpl/definition.ts.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/__tests__/data.test.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/__tests__/execute.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/api.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/definition.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/file.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/generate-api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/import-declaration.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/interface.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/ref.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/type.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/check.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/components.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/create.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/def.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/docs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/execute.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/pascal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/props.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/remove.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/router.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/tmpl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/utils.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/__tests__/data/api.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/__tests__/data/api.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/__tests__/definition.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/__tests__/definition.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/__tests__/generate-api.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/__tests__/generate-api.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/__tests__/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/__tests__/utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/definition.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/definition.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/file.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/file.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/file.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/import-declaration.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/interface.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/generate-api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/generate-api.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/interface.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/ref.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/ref.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/ref.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/type.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/type.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/type.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/check.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/create.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/def.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/docs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generate-api.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generate-api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/generate-api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/props.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/remove.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tmpl.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/api-beans.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/api-definition.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/execute.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/execute.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pascal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/pascal.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/api-generate.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/api-generate.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/swagger.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/swagger.d.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -49,14 +53,21 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="JRebelWorkspace">
+    <option name="jrebelEnabledAutocompile" value="true" />
+  </component>
   <component name="ProjectId" id="1S9K0cnqBV9FM2e2jyukXRA75mN" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/__tests__" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/api/__tests__" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -67,15 +78,24 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
+  <component name="PsiViewer.ProjectComponent">
+    <option name="HIGHLIGHT" value="false" />
+    <option name="FILTER_WHITESPACE" value="false" />
+    <option name="SHOW_PROPERTIES" value="true" />
+    <option name="SPLIT_DIVIDER_POSITION" value="300" />
+    <option name="AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="AUTOSCROLL_FROM_SOURCE" value="false" />
+  </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/api" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/api/__tests__" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/__tests__" />
       <recent name="$PROJECT_DIR$/src" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -90,8 +110,76 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="npm.build">
-    <configuration name="类型定义." type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Jest.执行.执行">
+    <configuration name="标准化名称" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/api/__tests__/generate-api.test.ts" />
+      <test-names>
+        <test-name value="标准化名称" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="标准化名称" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/api/__tests__/generate-api.test.ts" />
+      <test-names>
+        <test-name value="标准化名称" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="生成数据.生成数据" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/api/__tests__/data.test.ts" />
+      <test-names>
+        <test-name value="生成数据" />
+        <test-name value="生成数据" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="标准化名称.解析" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/api/__tests__/generate-api.test.ts" />
+      <test-names>
+        <test-name value="标准化名称" />
+        <test-name value="解析" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="执行.执行" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/api/__tests__/execute.ts" />
+      <test-names>
+        <test-name value="执行" />
+        <test-name value="执行" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="类型定义.生成" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <node-options value="" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
@@ -101,7 +189,7 @@
       <test-file value="$PROJECT_DIR$/src/api/__tests__/definition.test.ts" />
       <test-names>
         <test-name value="类型定义" />
-        <test-name value="" />
+        <test-name value="生成" />
       </test-names>
       <method v="2" />
     </configuration>
@@ -147,25 +235,14 @@
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="ref.resolve" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <node-options value="" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/src/api/__tests__/ref.test.ts" />
-      <test-names>
-        <test-name value="ref" />
-        <test-name value="resolve" />
-      </test-names>
+    <configuration name="generate-data.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/api/__tests__/generate-data.js" working-dir="$PROJECT_DIR$/src/api/__tests__">
       <method v="2" />
     </configuration>
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="api" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="build" />
+        <script value="api" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -173,11 +250,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.build" />
-        <item itemvalue="Jest.标准化名称.执行" />
-        <item itemvalue="Jest.ref.resolve" />
-        <item itemvalue="Jest.类型定义.生成" />
-        <item itemvalue="Jest.类型定义." />
+        <item itemvalue="Jest.执行.执行" />
+        <item itemvalue="npm.api" />
+        <item itemvalue="Jest.标准化名称.解析" />
+        <item itemvalue="Jest.生成数据.生成数据" />
+        <item itemvalue="Node.js.generate-data.js" />
       </list>
     </recent_temporary>
   </component>
@@ -195,7 +272,13 @@
       <workItem from="1571491186347" duration="1890000" />
       <workItem from="1571511436912" duration="14214000" />
       <workItem from="1571588708417" duration="65000" />
-      <workItem from="1571588820596" duration="11037000" />
+      <workItem from="1571588820596" duration="11379000" />
+      <workItem from="1571709886942" duration="9538000" />
+      <workItem from="1571792095165" duration="240000" />
+      <workItem from="1571798614081" duration="674000" />
+      <workItem from="1573104210480" duration="948000" />
+      <workItem from="1573105580623" duration="1010000" />
+      <workItem from="1573106790964" duration="10457000" />
     </task>
     <servers />
   </component>
@@ -203,11 +286,27 @@
     <option name="version" value="1" />
     <option name="exactExcludedFiles">
       <list>
-        <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/js/apps/business/callcenter/softphone/information-copy.js" />
-        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/common/definition.js" />
-        <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/common/definition.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/apps/business/workorders/12368/edit.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/admin/user/edit.js.map" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/admin/user/index.js.map" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/admin/app.js.map" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/admin/left-nav.js.map" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/admin/index.js.map" />
+        <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/js/apps/business/workorders/12368/interface-settings.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/js/apps/business/workorders/12368/interface-log.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/js/apps/business/workorders/12368/settings.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/apps/business/workorders/12368/detail-tab.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/js/apps/business/workorders/12368/log.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/apps/business/workorders/12368/detail.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/common/api-definition.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/common/common.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/directives/time.js.map" />
+        <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/common/api-definition.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/js/apps/business/quality/12368/quality-team.js" />
         <option value="$PROJECT_DIR$/../customer-service-system/src/main/resources/static/common/common.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/js/apps/business/quality/12368/quality-team.js" />
         <option value="$PROJECT_DIR$/../customer-service-system/types/api-definition.d.js" />
+        <option value="$PROJECT_DIR$/../customer-service-system/target/classes/static/common/store.js" />
       </list>
     </option>
   </component>

@@ -1,6 +1,6 @@
 module.exports = {
-  apiRoot: 'src/api',
-  typeRoot: 'types',
+  apiRoot: 'generated/api',
+  typeRoot: 'generated/types',
   templates: {
     definition: 'definition.ts.tmpl'
   },
@@ -20,10 +20,14 @@ module.exports = {
     }, {
       name: 'SimplePage',
       typeProperties: ['list']
+    }, {
+      name: 'Pair',
+      typeProperties: ['first', 'second']
     }]
   }],
   /**
    * 被解析为any类型的对象名称
    */
-  typesAsAny: ['JSONArray', 'Serializable', 'JSONObject']
+  typesAsAny: ['JSONArray', 'Serializable', 'JSONObject'],
+  unwrapTypes: ['Response', 'ResponseSimpleEnum', 'JsonResult']
 };

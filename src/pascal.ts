@@ -26,5 +26,5 @@ export const v2 = value => {
 
 
 export default (name) => {
-  return name.substring(0, 1).toUpperCase() + name.substring(1);
+  return name.substr(0, 1).toUpperCase() + name.substring(1);
 }

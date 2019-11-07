@@ -1,18 +1,18 @@
 {
-  "name": "aegis-ui-tools",
-  "version": "1.1.0",
+  "name": "aegis-dev-tools",
+  "version": "1.1.4",
   "description": "前端项目辅助工具",
   "author": "wuhao",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -p src --outDir dist",
+    "build": "tsc --outDir dist",
     "publish": "npm run build",
-    "api": "npm run build && node dist/execute.js",
+    "api": "jest --testNamePattern=执行 执行",
     "test": "jest"
   },
   "repository": "https://github.com/wuhao000/aegis-tools.git",
   "devDependencies": {
-    "@types/jest": "^24.0.19",
+    "@types/jest": "^24.0.22",
     "aegis-api-proxy": "0.0.1",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
@@ -21,7 +21,8 @@
     "typescript": "^3.5.2"
   },
   "files": [
-    "src"
+    "src",
+    "dist"
   ],
   "publishConfig": {
     "registry": "http://registry.npmjs.org"

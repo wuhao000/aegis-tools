@@ -15,7 +15,8 @@
     "sourceMap": false,
     "baseUrl": "./",
     "types": [
-      "node"
+      "node",
+      "jest"
     ],
     "paths": {
       "@/*": [
@@ -39,7 +40,10 @@
   },
   "include": [
     "*.ts",
-    "./types/api-generate.d.ts"
+    "./types/api-generate.d.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "**/__tests__/*.ts"
   ]
 }
-
