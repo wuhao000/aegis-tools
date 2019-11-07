@@ -1,7 +1,5 @@
-#!/usr/bin/env node
-
-import {ApiDefinitions, SwaggerDoc} from '../../types/swagger';
 import toPascal from '../pascal';
+import {ApiDefinitions, SwaggerDoc} from '../types/swagger';
 import Api, {toDefinitionString} from './api';
 import {ApiConfig, Config, getConfig} from './config';
 import {generateApiDefinitions, generateBeanDefinitions} from './definition';
@@ -66,6 +64,28 @@ export async function generateApi(config: ApiConfig) {
   return requests;
 }
 
+class ApiDef {
+  private apiDef: Api = null;
+  private isAPI: boolean = false;
+  private keyPath: string[];
+  private name: string = '';
+  private subApis: ApiDef[] = [];
+
+  constructor(obj: Api, keyPath: string[] = []) {
+    if (obj.url && obj.method) {
+      this.isAPI = true;
+      this.apiDef = obj;
+      this.keyPath = keyPath;
+    } else {
+      Object.keys(obj).forEach(key => {
+        const subObj = obj[key];
+        subObj.name = key;
+        this.subApis.push(new ApiDef(subObj, [].concat(keyPath).concat([key])));
+      });
+    }
+  }
+}
+
 /**
  * 生成类型定义
  * @param {ApiConfig[]} config
@@ -85,7 +105,9 @@ export function generateData(config: ApiConfig, datas: Array<{
   // 声明的接口
   let beanInterfaces: Interface[] = [];
   let apis: Api[] = [];
-  let apiObject: any = {};
+  let apiObject: Api = {
+    definitionPath: []
+  };
   datas.forEach(item => {
     const c = item.config;
     const data = item.data;
@@ -100,7 +122,7 @@ export function generateData(config: ApiConfig, datas: Array<{
   });
   const apiImportList: ImportDeclaration[] = [];
   apiImportList.push(new ImportDeclaration(
-      null, beanInterfaces.map(it => it.name), `./${beanDefFileName}`
+      null, beanInterfaces.map(it => it.name.name), `./${beanDefFileName}`
   ));
   return {
     config,
@@ -112,7 +134,7 @@ export function generateData(config: ApiConfig, datas: Array<{
         .map(it => ({name: it.name, body: toDefinitionString(it.value, it.level, it.key)}))
   } as APIData;
 
-  function resolveAPIInterfaces(obj: any, level: number = 0, parentKey: string = null, interfaces: Array<any> = []) {
+  function resolveAPIInterfaces(obj: Api, level: number = 0, parentKey: string = null, interfaces: Array<any> = []) {
     if (typeof obj === 'object') {
       if (obj.method && obj.url) {
       } else {
@@ -131,11 +153,20 @@ export function generateData(config: ApiConfig, datas: Array<{
                   }
                   resolveAPIInterfaces(value, level, key, interfaces);
                   name = normalizeName(name);
+                  const existsInterface = interfaces.find(it => it.name === name);
+                  if (existsInterface && existsInterface.keyPath) {
+                    if (existsInterface.keyPath.join('/') !== obj.definitionPath.join('/')) {
+                      name = generateName(
+                          name, obj.definitionPath, interfaces.map(it => it.name)
+                      );
+                    }
+                  }
                   interfaces.push({
                     name,
                     value,
                     level,
-                    key
+                    key,
+                    keyPath: obj.definitionPath
                   });
                 }
               }
@@ -146,8 +177,26 @@ export function generateData(config: ApiConfig, datas: Array<{
     }
     return interfaces;
   }
-
 }
+
+export const generateName = (name: string, keyPath: string[], allNames: string[]) => {
+  if (!allNames.includes(name)) {
+    return name;
+  } else {
+    const paths = [].concat(keyPath);
+    while (allNames.includes(name) && paths.length) {
+      name = normalizeName(toPascal(paths.pop())) + removePrefixDash(name);
+    }
+    return name;
+  }
+};
+
+export const removePrefixDash = (name: string) => {
+  if (name.indexOf('_') === 0) {
+    return removePrefixDash(name.substr(1));
+  }
+  return name;
+};
 
 export interface ApiDefinitionsResult {
   apiObject: {}

@@ -1,4 +1,6 @@
+import {config} from './config';
 import {normalizeName} from './generate-api';
+import {RefObject, resolveRefObject} from './ref';
 
 interface InterfaceProperty {
   description: string;
@@ -7,29 +9,37 @@ interface InterfaceProperty {
 }
 
 export default class Interface {
-  public name: string;
+  public name: RefObject;
   public properties: InterfaceProperty[];
-  public typeParameters: string[] = [];
 
   constructor() {
-    this.name = '';
+    this.name = null;
     this.properties = [];
   }
 
-  setName(name: string) {
-    this.name = normalizeName(name);
+  get unwrap() {
+    return this.name.unwrap;
   }
 
-  toString() {
-    return `export interface ${this.name}${this.typeParameters && this.typeParameters.length ? (`<${this.typeParameters.join(', ')}>`) : ''} {
+  public setName(name: string) {
+    this.name = resolveRefObject(normalizeName(name));
+  }
+
+
+  get ignore() {
+    return this.name.isObjectType || this.name.isArrayType || this.name.isAnyType;
+  }
+
+  public toString() {
+    return `export interface ${this.name.toString()} {
   ${
         this.properties.map(p => {
           return `${p.description ? `/**
 \t * ${p.description.trim()}
 \t */
-\t` : ''}${this.name === 'Account' && p.name === 'id' ? '// @ts-ignore\n\t' : ''}${p.name}?: ${p.type};`;
+\t` : ''}${this.name.name === 'Account' && p.name === 'id' ? '// @ts-ignore\n\t' : ''}${p.name}?: ${p.type};`;
         }).join('\n\t')
-        }
+    }
 }\n`;
   }
 }

@@ -1,5 +1,5 @@
-import {SwaggerResponse} from '../../types/swagger';
-import {resolveRef} from './ref';
+import {SwaggerResponse} from '../types/swagger';
+import {RefObject, resolveRef, resolveRefObject} from './ref';
 
 export const types: Type[] = [];
 
@@ -79,7 +79,7 @@ export function resolveType(propertyType: string, propertyDefinition?) {
   return type;
 }
 
-export function resolveResponseType(response: SwaggerResponse) {
+export function resolveResponseType(response: SwaggerResponse): RefObject {
   if (response.schema) {
     if (response.schema.genericRef || response.schema.$ref) {
       // 将«»替换为<>
@@ -87,7 +87,9 @@ export function resolveResponseType(response: SwaggerResponse) {
       return resolveRef(ref);
     } else if (response.schema.items) {
       if (response.schema.items.genericRef && response.schema.items.genericRef.simpleRef) {
-        return response.schema.items.genericRef.simpleRef + '[]';
+        const refObj = resolveRefObject(response.schema.items.genericRef.simpleRef)
+        refObj.isEnum = true;
+        return  refObj;
       }
       console.debug('无法识别response类型：');
       console.log(response);

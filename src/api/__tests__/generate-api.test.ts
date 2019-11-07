@@ -26,11 +26,11 @@ describe('标准化名称', () => {
     }
   });
   it('解析', () => {
-
     const res = generateData(config, [{
       config: config.configs[0],
       data
     }]);
-    console.log(res);
+    const a = res.apiInterfaces.filter(it => it.name === 'ApiApiSysdicAPI<T>');
+    console.log(a);
   });
 });

@@ -1,20 +1,21 @@
-import {BodyParameter} from '../../types/api-generate';
 import toPascal from '../pascal';
-import {normalizeName} from './generate-api';
+import {BodyParameter} from '../types/api-generate';
+import {generateName, normalizeName} from './generate-api';
+import {RefObject} from './ref';
 
 export default class Api {
-  public bodyParameter: BodyParameter = null;
+  public bodyParameter?: BodyParameter = null;
   public definitionPath: any[];
-  public id: string;
-  public isFormData: boolean;
-  public method: string;
-  public name: string;
-  public parameters: any[];
-  public path: string;
-  public responseType: string;
-  public summary: string;
-  public type: any;
-  public url: string;
+  public id?: string;
+  public isFormData?: boolean;
+  public method?: string;
+  public name?: string;
+  public parameters?: any[];
+  public path?: string;
+  public responseType?: RefObject;
+  public summary?: string;
+  public type?: any;
+  public url?: string;
 
   constructor() {
     this.name = '';
@@ -26,7 +27,7 @@ export default class Api {
     this.isFormData = false;
     this.method = '';
     this.parameters = [];
-    this.responseType = '';
+    this.responseType = null;
   }
 
   toString() {
@@ -61,7 +62,7 @@ ${space}}`;
       }
       str += `\n${' '.repeat(2 * (level - 1))}}`;
     } else {
-      str += `${space}${keys.map(key => {
+      str += `${space}${keys.filter(it => it !== 'definitionPath').map(key => {
         const value = obj[key];
         if (typeof value === 'object') {
           return `${normalizeName(key)}: ${toAPIString2(value, level + 1)}`;
@@ -81,6 +82,7 @@ ${space}}`;
   return str;
 }
 
+const apiNames = [];
 
 export function toDefinitionString(obj: Api, level: number = 0, parentKey: string = null) {
   let str = '';
@@ -94,7 +96,7 @@ export function toDefinitionString(obj: Api, level: number = 0, parentKey: strin
         str += 'GenericAPI<T';
       }
       if (obj.responseType) {
-        str += `, ${obj.responseType}`;
+        str += `, ${obj.responseType.toString()}`;
       }
       if (obj.bodyParameter && obj.parameters.length) {
         // console.error('混合参数无法解析');
@@ -107,7 +109,7 @@ export function toDefinitionString(obj: Api, level: number = 0, parentKey: strin
       str += '{';
       const keys = Object.keys(obj);
       if (keys.length) {
-        str += `\n${keys.map((key: string) => {
+        str += `\n${keys.filter(it => it !== 'definitionPath').map((key: string) => {
           const value = obj[key];
           if (typeof value === 'object') {
             if (value.method && value.url) {
@@ -122,6 +124,10 @@ ${space}${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
                   name = toPascal(parentKey) + name;
                 }
                 name = normalizeName(name);
+                if (apiNames.includes(name)) {
+                  name = generateName(name, obj.definitionPath || [], apiNames);
+                }
+                apiNames.push(name);
                 return `\t${normalizeName(key)}: ${name}`;
               } else {
                 return `\t${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;

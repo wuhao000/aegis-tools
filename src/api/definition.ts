@@ -1,16 +1,23 @@
-import {ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../../types/swagger';
 import toPascal from '../pascal';
+import {ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
 import Api from './api';
 import {Config} from './config';
 import {ApiDefinitionsResult, normalizeName} from './generate-api';
 import Interface from './interface';
-import {isArrayType, isObjectType} from './ref';
+import {RefObject} from './ref';
 import Type, {addType, findTypeByEnum, pure, resolveResponseType, resolveType} from './type';
 
 export function generateBeanDefinitions(definitions: ApiDefinitions, config: Config): Interface[] {
   const keys = Object.keys(definitions);
   const beanInterfaces: Interface[] = [];
+
   // keys: ['Response«List«SysDic»»', 'Response«List«WorkordersExtraField»»', 'User', ...]
+  function addInterface(inter: Interface) {
+    if (!beanInterfaces.some(it => it.name.name === inter.name.name) && !inter.ignore) {
+      beanInterfaces.push(inter);
+    }
+  }
+
   keys.forEach(key => {
     const definition = definitions[key];
     const inter = new Interface();
@@ -45,17 +52,15 @@ export function generateBeanDefinitions(definitions: ApiDefinitions, config: Con
           });
         }
       });
-      if (!inter.name.includes('Response<') && !inter.name.includes('ResponseSimpleEnum<')) {
-        if (inter.name.includes('<')) { // 处理带有泛型的情况
-          const typeParameterString = inter.name.substring(inter.name.indexOf('<') + 1, inter.name.length - 1);
-          inter.name = inter.name.substring(0, inter.name.indexOf('<'));
+      if (!inter.unwrap) {
+        if (inter.name.typeParameters.length) { // 处理带有泛型的情况
           if (config.typeParameterReflects) {
-            const reflect = config.typeParameterReflects.find(it => it.name === inter.name);
+            const reflect = config.typeParameterReflects.find(it => it.name === inter.name.name);
             if (reflect) {
               const typeChars = ['T', 'S', 'U', 'V', 'P', 'M'];
-              const typeParameters = typeParameterString.split(',');
+              const typeParameters = inter.name.typeParameters;
               const properties = typeParameters.map((it, index) => {
-                inter.typeParameters.push(typeChars[index]);
+                inter.name.typeParameters[index] = new RefObject(typeChars[index]);
                 const property = inter.properties.find(it => it.name === reflect.typeProperties[index]);
                 if (!property) {
                   throw new Error(`在${reflect.name}上找不到属性${reflect.typeProperties[index]}, 存在的属性：${inter.properties.map(it => it.name)}`);
@@ -70,9 +75,7 @@ export function generateBeanDefinitions(definitions: ApiDefinitions, config: Con
                     property.type = typeChars[index];
                   }
                 });
-                if (!beanInterfaces.some(it => it.name === inter.name)) {
-                  beanInterfaces.push(inter);
-                }
+                addInterface(inter);
               } else {
                 console.error(`数据类型【${inter.name}】参数【${properties.find(it => it.type.includes('<')).name}】含有泛型，无法解析为泛型关联属性`);
               }
@@ -83,15 +86,11 @@ export function generateBeanDefinitions(definitions: ApiDefinitions, config: Con
             console.error(`数据类型【${inter.name}】包含泛型参数，但是缺少泛型映射配置`);
           }
         } else {
-          if (!beanInterfaces.some(it => it.name === inter.name)) {
-            beanInterfaces.push(inter);
-          }
+          addInterface(inter);
         }
       }
     } else {
-      if (!isArrayType(inter.name) && isObjectType(inter.name)) {
-        beanInterfaces.push(inter);
-      }
+      addInterface(inter);
     }
   });
   return beanInterfaces;
@@ -133,12 +132,9 @@ export function generateApiDefinitions(data: SwaggerDoc,
           const nonPathParameters = typeDefinition.parameters && typeDefinition.parameters.filter(it => it.in !== 'path') || [];
           api.isFormData = !(nonPathParameters.length === 1 && nonPathParameters[0].in === 'body');
         }
-        const responseType = resolveResponseType(
+        api.responseType = resolveResponseType(
             typeDefinition.responses['200']
         );
-        if (responseType) {
-          api.responseType = responseType;
-        }
         if (typeDefinition.parameters && typeDefinition.parameters.length) {
           typeDefinition.parameters.forEach((p: SwaggerParameter) => {
             let enumType = '';
@@ -183,9 +179,9 @@ export function generateApiDefinitions(data: SwaggerDoc,
   const apiObject = {};
   apis.forEach(api => {
     let tmp = apiObject;
-    api.definitionPath.forEach(dp => {
+    api.definitionPath.forEach((dp, index) => {
       if (!tmp[dp]) {
-        tmp[dp] = {};
+        tmp[dp] = {definitionPath: api.definitionPath.slice(0, index)};
       }
       tmp = tmp[dp];
     });

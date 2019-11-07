@@ -25,6 +25,7 @@ export interface ApiConfig {
   templates: { [key: string]: string };
   typeRoot: string;
   typesAsAny?: string[]
+  unwrapTypes?: string[];
 }
 
 

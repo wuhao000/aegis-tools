@@ -3,12 +3,12 @@ import {config} from './config';
 /**
  * 解析swagger中的类型对应的ts类型
  */
-export function resolveRef(ref: string) {
+export function resolveRef(ref: string): RefObject {
   const obj = resolveRefObject(ref);
-  if (obj.name === 'Response' || obj.name === 'ResponseSimpleEnum') {
-    return obj.typeParameters[0].toString();
+  if (obj.unwrap) {
+    return obj.typeParameters[0];
   } else {
-    return obj.toString();
+    return obj;
   }
 }
 
@@ -30,10 +30,11 @@ export function isArrayType(name: string): boolean {
   return refConfig.arrayTypes.includes(name);
 }
 
-class RefObject {
+export class RefObject {
   public name: string;
   public parent: RefObject;
   public typeParameters: Array<RefObject>;
+  public isEnum: boolean = false;
 
   public constructor(p1: string | RefObject, p2?: RefObject) {
     if (p2) {
@@ -49,8 +50,27 @@ class RefObject {
     this.typeParameters = [];
   }
 
+  get unwrap() {
+    if (config.unwrapTypes) {
+      return config.unwrapTypes.includes(this.name);
+    }
+    return false;
+  }
+
+  get isArrayType() {
+    return isArrayType(this.name) || this.isEnum;
+  }
+
+  get isObjectType() {
+    return isObjectType(this.name);
+  }
+
+  get isAnyType() {
+    return config.typesAsAny && config.typesAsAny.includes(this.name) || this.name === 'object';
+  }
+
   public toString() {
-    if (isArrayType(this.name)) {
+    if (this.isArrayType) {
       if (this.typeParameters.length >= 1) {
         if (this.typeParameters.length > 1) {
           console.error(`数组类型【${this.name}】只允许有一个泛型参数`);
@@ -62,7 +82,7 @@ class RefObject {
       } else {
         return 'any[]';
       }
-    } else if (isObjectType(this.name)) {
+    } else if (this.isObjectType) {
       if (this.typeParameters.length >= 2) {
         if (this.typeParameters.length > 2) {
           console.error(`对象类型【${this.name}】只允许有2个泛型参数`);
@@ -73,14 +93,12 @@ class RefObject {
       }
     } else if (this.typeParameters.length) {
       return `${this.name}<${this.typeParameters.map(it => it.toString()).join(', ')}>`;
-    } else if (config.typesAsAny && config.typesAsAny.includes(this.name)) {
+    } else if (this.isAnyType) {
       return 'any';
     } else if (refConfig.numberTypes.includes(this.name)) {
       return 'number';
     } else if (this.name === 'Unit') {
       return 'never';
-    } else if (this.name === 'object') {
-      return 'any';
     } else if (['String', 'Boolean'].includes(this.name)) {
       return this.name.toLowerCase();
     } else {
@@ -90,7 +108,7 @@ class RefObject {
 }
 
 // 将引用名称解析为对象
-export function resolveRefObject(ref) {
+export function resolveRefObject(ref): RefObject {
   let name = '';
   const refObj = new RefObject(null);
   let tmp: RefObject = refObj;
@@ -117,6 +135,9 @@ export function resolveRefObject(ref) {
       }
       name = '';
     }
+  }
+  if (name) {
+    refObj.name = name;
   }
   return refObj;
 }

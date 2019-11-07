@@ -1,4 +1,4 @@
-import {SwaggerDoc} from '../../../types/swagger';
+import {SwaggerDoc} from '../../types/swagger';
 import {getConfig} from '../config';
 
 export const config = getConfig();
