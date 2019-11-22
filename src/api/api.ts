@@ -3,6 +3,8 @@ import {BodyParameter} from '../types/api-generate';
 import {generateName, normalizeName} from './generate-api';
 import {RefObject} from './ref';
 
+export const METHODS_SUPPORT_FORM_DATA = ['POST', 'PUT', 'DELETE'];
+
 export default class Api {
   public bodyParameter?: BodyParameter = null;
   public definitionPath: any[];
@@ -52,7 +54,7 @@ export function toAPIString2(obj, level = 0) {
     const keys = Object.keys(obj);
     if (keys.includes('url') && keys.includes('method')) {
       str += space + `url: '${obj.url}',\n${space}method: '${obj.method}'`;
-      if (['POST', 'PUT'].includes(obj.method)) {
+      if (METHODS_SUPPORT_FORM_DATA.includes(obj.method)) {
         str += `,\n${space}isFormData: ${obj.isFormData}`;
       }
       if (obj.parameters.length === 1 && ['string', 'number'].includes(obj.parameters[0].type)) {
@@ -128,9 +130,9 @@ ${space}${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
                   name = generateName(name, obj.definitionPath || [], apiNames);
                 }
                 apiNames.push(name);
-                return `\t${normalizeName(key)}: ${name}`;
+                return `  ${normalizeName(key)}: ${name}`;
               } else {
-                return `\t${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
+                return `  ${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
               }
             }
           } else {

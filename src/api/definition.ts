@@ -1,6 +1,6 @@
 import toPascal from '../pascal';
 import {ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
-import Api from './api';
+import Api, {METHODS_SUPPORT_FORM_DATA} from './api';
 import {Config} from './config';
 import {ApiDefinitionsResult, normalizeName} from './generate-api';
 import Interface from './interface';
@@ -128,7 +128,7 @@ export function generateApiDefinitions(data: SwaggerDoc,
         api.definitionPath = resolveDefinitionPath(path);
         api.definitionPath.push(api.name);
         // POST和PUT请求要判断请求的参数格式是json格式还是form表单的格式
-        if (['POST', 'PUT'].includes(method)) {
+        if (METHODS_SUPPORT_FORM_DATA.includes(method)) {
           const nonPathParameters = typeDefinition.parameters && typeDefinition.parameters.filter(it => it.in !== 'path') || [];
           api.isFormData = !(nonPathParameters.length === 1 && nonPathParameters[0].in === 'body');
         }

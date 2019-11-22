@@ -31,15 +31,19 @@ export default class Interface {
   }
 
   public toString() {
-    return `export interface ${this.name.toString()} {
+    if(this.properties.length){
+      return `export interface ${this.name.toString()} {
   ${
-        this.properties.map(p => {
-          return `${p.description ? `/**
-\t * ${p.description.trim()}
-\t */
-\t` : ''}${this.name.name === 'Account' && p.name === 'id' ? '// @ts-ignore\n\t' : ''}${p.name}?: ${p.type};`;
-        }).join('\n\t')
-    }
+          this.properties.map(p => {
+            return `${p.description ? `/**
+   * ${p.description.trim()}
+   */
+  ` : ''}${this.name.name === 'Account' && p.name === 'id' ? '// @ts-ignore\n  ' : ''}${p.name}?: ${p.type};`;
+          }).join('\n  ')
+      }
 }\n`;
+    } else {
+      return `export interface ${this.name.toString()} {}\n`
+    }
   }
 }
