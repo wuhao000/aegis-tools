@@ -6,7 +6,7 @@ import {generateApiDefinitions, generateBeanDefinitions} from './definition';
 import {beanDefFileName, writeFile} from './file';
 import ImportDeclaration from './import-declaration';
 import Interface from './interface';
-import {pure} from './type';
+import {pure, types} from './type';
 
 
 export function generateAPI() {
@@ -16,14 +16,12 @@ export function generateAPI() {
   }
 }
 
-export function pureDefinitions(definitions: ApiDefinitions): ApiDefinitions {
-  const res: ApiDefinitions = {};
-  Object.keys(definitions).forEach(key => {
-    res[pure(key)] = definitions[key];
-  });
-  return res;
-}
-
+/**
+ * 1.将包含.的名称转换为帕斯卡命名的名称
+ * 2.如果名称中包含中括号，转换成_连接的形式
+ * @param {string} name
+ * @return {string}
+ */
 export function normalizeName(name: string) {
   if (name.includes('.')) {
     const parts = name.split('.');
@@ -105,6 +103,7 @@ export function generateData(config: ApiConfig, datas: Array<{
   // 声明的接口
   let beanInterfaces: Interface[] = [];
   let apis: Api[] = [];
+  // @ts-ignore
   let apiObject: Api = {
     definitionPath: []
   };
@@ -122,13 +121,14 @@ export function generateData(config: ApiConfig, datas: Array<{
   });
   const apiImportList: ImportDeclaration[] = [];
   apiImportList.push(new ImportDeclaration(
-      null, beanInterfaces.map(it => it.name.name), `./${beanDefFileName}`
+      null, types.map(it => it.name).concat(beanInterfaces.map(it => it.name.name)), `./${beanDefFileName}`
   ));
   return {
     config,
     interfaces: beanInterfaces,
     apiObject,
     imports: apiImportList,
+    apis,
     generatedApisBody: toDefinitionString(apiObject),
     apiInterfaces: resolveAPIInterfaces(apiObject, 0, null, [])
         .map(it => ({name: it.name, body: toDefinitionString(it.value, it.level, it.key)}))
@@ -209,6 +209,7 @@ export interface ApiDefinitionsResult {
 export interface APIData {
   apiInterfaces: APIInterface[];
   apiObject: object;
+  apis: Api[];
   config: ApiConfig;
   generatedApisBody: string;
   imports: ImportDeclaration[];

@@ -1,6 +1,10 @@
+import {writeFile} from '../file';
 import {generateAPI, generateData, normalizeName} from '../generate-api';
 import {config, data} from './utils';
 
+const res = generateData(config, [{
+  config: config.configs[0], data
+}]);
 describe('标准化名称', () => {
   it('数字', () => {
     const name = '12345';
@@ -26,11 +30,15 @@ describe('标准化名称', () => {
     }
   });
   it('解析', () => {
-    const res = generateData(config, [{
-      config: config.configs[0],
-      data
-    }]);
     const a = res.apiInterfaces.filter(it => it.name === 'ApiApiSysdicAPI<T>');
     console.log(a);
+  });
+  it('参数', () => {
+    res.apis.forEach(it => {
+      // console.log(it);
+    });
+  });
+  it('写入文件', () => {
+    writeFile(res);
   });
 });

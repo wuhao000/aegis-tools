@@ -1,6 +1,6 @@
 import toPascal from '../pascal';
 import {ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
-import Api, {METHODS_SUPPORT_FORM_DATA} from './api';
+import Api, {METHODS_SUPPORT_FORM_DATA, Parameter} from './api';
 import {Config} from './config';
 import {ApiDefinitionsResult, normalizeName} from './generate-api';
 import Interface from './interface';
@@ -150,11 +150,15 @@ export function generateApiDefinitions(data: SwaggerDoc,
               enumType = type.name;
             }
             if (p.in !== 'body') {
-              api.parameters.push({
+              api.addParameter(new Parameter({
                 name: p.name,
+                in: p.in,
+                description: p.description,
+                default: p.default,
+                format: p.format,
                 required: p.required,
                 type: enumType ? enumType : resolveType(p.type)
-              });
+              }));
             } else {
               if (p.schema.genericRef) {
                 api.bodyParameter = {

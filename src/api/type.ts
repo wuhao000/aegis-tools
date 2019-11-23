@@ -39,7 +39,7 @@ export default class Type {
 
   toString() {
     return `${this.description ? '/**\n * ' + this.description + '\n */\n'
-        : ''}type ${this.name} =\n    ${this.values.map(v => {
+        : ''}export type ${this.name} =\n    ${this.values.map(v => {
       if (this.type === 'number') {
         return `${v}`;
       } else {

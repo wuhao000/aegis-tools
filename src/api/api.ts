@@ -5,6 +5,54 @@ import {RefObject} from './ref';
 
 export const METHODS_SUPPORT_FORM_DATA = ['POST', 'PUT', 'DELETE'];
 
+export class Parameter {
+  public children: Parameter[] = [];
+  public default?: any;
+  public description?: string;
+  public format?: string;
+  public in: string;
+  public name: string;
+  public required: boolean;
+  public type: string;
+
+  constructor(props) {
+    Object.assign(this, props);
+    if (this.name.endsWith('[0]')) {
+      this.name = this.name.substr(0, this.name.length - 3);
+      this.type = this.type + '[]';
+    }
+  }
+
+  public addChild(parameter: Parameter) {
+    if (!this.children.some(it => it.name === parameter.name)) {
+      this.children.push(parameter);
+    }
+  }
+
+  public toString() {
+    let str = '    ';
+    if (this.description) {
+      str += `/**
+    * ${this.description}
+    */
+    `;
+    }
+    str += this.name;
+    if (!this.required) {
+      str += '?';
+    }
+    str += ': ';
+    if (this.children.length) {
+      str += `{
+${this.children.map(it => it.toString()).join(',\n')}
+    }`;
+    } else {
+      str += this.type;
+    }
+    return str;
+  }
+}
+
 export default class Api {
   public bodyParameter?: BodyParameter = null;
   public definitionPath: any[];
@@ -12,7 +60,7 @@ export default class Api {
   public isFormData?: boolean;
   public method?: string;
   public name?: string;
-  public parameters?: any[];
+  public parameters?: Parameter[];
   public path?: string;
   public responseType?: RefObject;
   public summary?: string;
@@ -32,7 +80,43 @@ export default class Api {
     this.responseType = null;
   }
 
-  toString() {
+  public addParameter(param: Parameter) {
+    if (param.name.includes('.')) {
+      const nameParts = param.name.split('.');
+      let parentParam: Parameter = this.parameters.find(it => it.name === nameParts[0]) ||
+          new Parameter({
+            name: nameParts[0],
+            required: param.required,
+            type: 'object',
+            in: param.in
+          });
+      if (!this.parameters.some(it => it.name === nameParts[0])) {
+        this.addParameter(parentParam);
+      }
+      if (param.required) {
+        parentParam.required = true;
+      }
+      nameParts.forEach((part, index) => {
+        if (index > 0) {
+          const tmpParam = new Parameter({
+            name: part,
+            in: param.in,
+            required: param.required,
+            type: index === nameParts.length - 1 ? param.type : 'object'
+          });
+          if (param.required) {
+            tmpParam.required = true;
+          }
+          parentParam.addChild(tmpParam);
+          parentParam = tmpParam;
+        }
+      });
+    } else if (!this.parameters.some(it => it.name === param.name)) {
+      this.parameters.push(param);
+    }
+  }
+
+  public toString() {
     return `{
     url: ${this.path},
     method: ${this.type},
@@ -100,10 +184,14 @@ export function toDefinitionString(obj: Api, level: number = 0, parentKey: strin
       if (obj.responseType) {
         str += `, ${obj.responseType.toString()}`;
       }
-      if (obj.bodyParameter && obj.parameters.length) {
-        // console.error('混合参数无法解析');
-      } else if (obj.bodyParameter) {
-        str += ', ' + obj.bodyParameter.type;
+      if (obj.bodyParameter) {
+        if (obj.parameters.length) {
+          console.error('混合参数无法解析');
+        } else {
+          str += ', ' + obj.bodyParameter.type;
+        }
+      } else if (obj.parameters.length) {
+        str += ', ' + createParametersType(obj.parameters);
       }
       str += '>';
     } else {
@@ -145,3 +233,9 @@ ${space}${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
   }
   return str;
 }
+
+const createParametersType = (parameters: Parameter[]) => {
+  return `{
+${parameters.map(it => it.toString()).join(',\n')}
+  }`;
+};
