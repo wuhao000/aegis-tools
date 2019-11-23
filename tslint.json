@@ -1,0 +1,68 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**/*.ts",
+      "*.md"
+    ]
+  },
+  "rules": {
+    "quotemark": {
+      "options": [
+        "single",
+        "jsx-double"
+      ]
+    },
+    "indent": true,
+    "max-line-length": [
+      true,
+      120
+    ],
+    "no-console": [
+      false
+    ],
+    "no-string-literal": false,
+    "interface-name": false,
+    "no-parameter-reassignment": false,
+    "no-bitwise": false,
+    "no-object-literal-type-assertion": false,
+    "no-unused-expression": true,
+    "no-default-export": false,
+    "no-empty-interface": false,
+    "interface-over-type-literal": false,
+    "semicolon": true,
+    "arrow-parens": false,
+    "array-type": false,
+    "object-literal-sort-keys": false,
+    "object-literal-key-quotes": [
+      true,
+      "as-needed"
+    ],
+    "trailing-comma": false,
+    "ordered-imports": false,
+    "max-classes-per-file": true,
+    "radix": false,
+    "no-conditional-assignment": true,
+    "no-consecutive-blank-lines": [
+      false
+    ],
+    "variable-name": true,
+    "no-shadowed-variable": true,
+    "jsdoc-format": true,
+    "only-arrow-functions": true,
+    "no-empty": false,
+    "member-ordering": true,
+    "no-var-requires": true,
+    "no-reference": true,
+    "prefer-const": true,
+    "no-namespace": false,
+    "class-name": false,
+    "newline-before-return": false,
+    "prefer-for-of": true,
+    "forin": false,
+    "adjacent-overload-signatures": false
+  }
+}

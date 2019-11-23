@@ -33,8 +33,8 @@ export class Parameter {
     let str = '    ';
     if (this.description) {
       str += `/**
-    * ${this.description}
-    */
+     * ${this.description}
+     */
     `;
     }
     str += this.name;
