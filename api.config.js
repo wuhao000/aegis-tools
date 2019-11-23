@@ -23,6 +23,9 @@ module.exports = {
     }, {
       name: 'Pair',
       typeProperties: ['first', 'second']
+    }, {
+      name: 'RequestValues',
+      typeProperties: ['data']
     }]
   }],
   /**

@@ -123,6 +123,10 @@ export default class Api {
     errorHandleType: 'custom'
     }`;
   }
+
+  setBodyParameter(parameter: Parameter) {
+    this.bodyParameter = parameter;
+  }
 }
 
 export function toAPIString(obj) {

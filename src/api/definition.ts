@@ -160,18 +160,31 @@ export function generateApiDefinitions(data: SwaggerDoc,
                 type: enumType ? enumType : resolveType(p.type)
               }));
             } else {
-              if (p.schema.genericRef) {
-                api.bodyParameter = {
+              if (p.schema.$ref || p.schema.genericRef) {
+                api.setBodyParameter(new Parameter({
                   name: p.name,
                   required: true,
-                  type: toPascal(pure(p.schema.genericRef.simpleRef))
-                };
+                  type: toPascal(pure(p.schema.$ref || p.schema.genericRef.simpleRef))
+                }));
               } else if (p.schema.items) {
-                api.bodyParameter = {
+                api.setBodyParameter(new Parameter({
                   name: p.name,
                   required: true,
                   type: 'Array<' + (p.schema.items.genericRef !== undefined ? pure(p.schema.items.genericRef.simpleRef) : 'any') + '>'
-                };
+                }));
+              } else {
+                if (p.schema.type === 'string') {
+                  api.addParameter(new Parameter({
+                    name: p.name,
+                    description: p.description,
+                    default: p.default,
+                    format: p.format,
+                    required: p.required,
+                    type: 'string'
+                  }));
+                } else {
+                  console.error(`接口${api.url}存在无法识别的参数${p.name}`);
+                }
               }
             }
           });

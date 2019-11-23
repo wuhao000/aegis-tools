@@ -87,12 +87,15 @@ export function resolveResponseType(response: SwaggerResponse): RefObject {
       return resolveRef(ref);
     } else if (response.schema.items) {
       if (response.schema.items.genericRef && response.schema.items.genericRef.simpleRef) {
-        const refObj = resolveRefObject(response.schema.items.genericRef.simpleRef)
+        const refObj = resolveRefObject(response.schema.items.genericRef.simpleRef);
         refObj.isEnum = true;
-        return  refObj;
+        return refObj;
+      } else if (response.schema.items.$ref) {
+        const refObj = resolveRefObject(response.schema.items.$ref);
+        refObj.isEnum = true;
+        return refObj;
       }
-      console.debug('无法识别response类型：');
-      console.log(response);
+      console.error('无法识别response类型：' + JSON.stringify(response));
     }
   }
   return undefined;
@@ -103,5 +106,5 @@ export function pure(ref): string {
   // if (!/^[a-zA-Z0-9<>\[\],]+$/i.test(res)) {
   //   console.log(res);
   // }
-  return ref.replace(/«/g, '<').replace(/»/g, '>');
+  return ref.replace('#/definitions/', '').replace(/«/g, '<').replace(/»/g, '>');
 }

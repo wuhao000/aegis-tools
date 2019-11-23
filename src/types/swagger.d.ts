@@ -126,6 +126,7 @@ interface ResponseSchema {
   genericRef: GenericRef;
   $ref: string;
   items: any;
+  type?: string;
 }
 
 declare type ParameterPositionType = 'query' | 'path' | 'body';
