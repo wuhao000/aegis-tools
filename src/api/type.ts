@@ -72,7 +72,7 @@ export function resolveType(propertyType: string, propertyDefinition?) {
       type = propertyDefinition.genericRef.simpleRef;
     } else {
       if (propertyType === 'object') {
-        type = 'object';
+        type = 'any';
       }
     }
   }

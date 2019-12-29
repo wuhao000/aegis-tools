@@ -87,7 +87,7 @@ export default class Api {
           new Parameter({
             name: nameParts[0],
             required: param.required,
-            type: 'object',
+            type: 'any',
             in: param.in
           });
       if (!this.parameters.some(it => it.name === nameParts[0])) {
@@ -102,7 +102,7 @@ export default class Api {
             name: part,
             in: param.in,
             required: param.required,
-            type: index === nameParts.length - 1 ? param.type : 'object'
+            type: index === nameParts.length - 1 ? param.type : 'any'
           });
           if (param.required) {
             tmpParam.required = true;
