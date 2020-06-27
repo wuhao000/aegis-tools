@@ -5,6 +5,12 @@ import {config, data} from './utils';
 const res = generateData(config, [{
   config: config.configs[0], data
 }]);
+describe('接口定义', () => {
+  it('写入文件', () => {
+    writeFile(res);
+  });
+});
+
 describe('标准化名称', () => {
   it('数字', () => {
     const name = '12345';

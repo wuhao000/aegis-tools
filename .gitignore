@@ -5,4 +5,4 @@ node_modules/
 dist/
 .idea
 generated
-src/api/__tests__/data/api.json
+src/api/__tests__/data

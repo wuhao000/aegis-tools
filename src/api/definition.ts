@@ -125,7 +125,12 @@ export function generateApiDefinitions(data: SwaggerDoc,
         // swagger自动生成的api的id格式为 java方法名+Using+请求方式，这里取Using之前的部分，即java方法名
         api.name = api.id.substring(0, api.id.indexOf('Using'));
         // 将接口路径按/分割，并作为自定接口对象的多层次key
-        api.definitionPath = resolveDefinitionPath(path);
+        const resolvedPath = resolveDefinitionPath(path);
+        if (resolvedPath.length > 0 && resolvedPath[resolvedPath.length - 1] === api.name) {
+          api.definitionPath = resolvedPath.slice(0, resolvedPath.length - 1);
+        } else {
+          api.definitionPath = resolvedPath;
+        }
         api.definitionPath.push(api.name);
         // POST和PUT请求要判断请求的参数格式是json格式还是form表单的格式
         if (METHODS_SUPPORT_FORM_DATA.includes(method)) {
@@ -196,13 +201,15 @@ export function generateApiDefinitions(data: SwaggerDoc,
   const apiObject = {};
   apis.forEach(api => {
     let tmp = apiObject;
-    api.definitionPath.forEach((dp, index) => {
-      if (!tmp[dp]) {
-        tmp[dp] = {definitionPath: api.definitionPath.slice(0, index)};
-      }
-      tmp = tmp[dp];
-    });
-    Object.assign(tmp, api);
+    if (api.definitionPath.length){
+      api.definitionPath.forEach((dp, index) => {
+        if (!tmp[dp]) {
+          tmp[dp] = {definitionPath: api.definitionPath.slice(0, index)};
+        }
+        tmp = tmp[dp];
+      });
+      Object.assign(tmp, api);
+    }
   });
   return {
     apis,
