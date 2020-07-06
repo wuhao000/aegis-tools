@@ -1,12 +1,12 @@
 import toPascal from '../pascal';
-import {ApiDefinitions, SwaggerDoc} from '../types/swagger';
-import Api, {toDefinitionString} from './api';
+import {SwaggerDoc} from '../types/swagger';
+import Api, {DEFINITION_PATH_KEY, toDefinitionString} from './api';
 import {ApiConfig, Config, getConfig} from './config';
 import {generateApiDefinitions, generateBeanDefinitions} from './definition';
 import {beanDefFileName, writeFile} from './file';
 import ImportDeclaration from './import-declaration';
 import Interface from './interface';
-import {pure, types} from './type';
+import {types} from './type';
 
 
 export function generateAPI() {
@@ -70,7 +70,7 @@ class ApiDef {
   private subApis: ApiDef[] = [];
 
   constructor(obj: Api, keyPath: string[] = []) {
-    if (obj.url && obj.method) {
+    if (obj.__url && obj.__method) {
       this.isAPI = true;
       this.apiDef = obj;
       this.keyPath = keyPath;
@@ -82,6 +82,10 @@ class ApiDef {
       });
     }
   }
+}
+
+export function isApiObject(obj: Api) {
+  return obj.__method && obj.__url
 }
 
 /**
@@ -105,7 +109,7 @@ export function generateData(config: ApiConfig, datas: Array<{
   let apis: Api[] = [];
   // @ts-ignore
   let apiObject: Api = {
-    definitionPath: []
+    __definitionPath: []
   };
   datas.forEach(item => {
     const c = item.config;
@@ -136,17 +140,17 @@ export function generateData(config: ApiConfig, datas: Array<{
 
   function resolveAPIInterfaces(obj: Api, level: number = 0, parentKey: string = null, interfaces: Array<any> = []) {
     if (typeof obj === 'object') {
-      if (obj.method && obj.url) {
+      if (isApiObject(obj)) {
       } else {
         const keys = Object.keys(obj);
         if (keys.length) {
           keys.forEach(key => {
-            if (key === 'definitionPath') {
+            if (key === DEFINITION_PATH_KEY) {
               return;
             }
-            const value = obj[key];
+            const value: Api = obj[key];
             if (typeof value === 'object') {
-              if (value.method && value.url) {
+              if (isApiObject(value)) {
                 resolveAPIInterfaces(value, level + 1, key, interfaces);
               } else {
                 if (level === 0) {
@@ -158,9 +162,9 @@ export function generateData(config: ApiConfig, datas: Array<{
                   name = normalizeName(name);
                   const existsInterface = interfaces.find(it => it.name === name);
                   if (existsInterface && existsInterface.keyPath) {
-                    if (existsInterface.keyPath.join('/') !== obj.definitionPath.join('/')) {
+                    if (existsInterface.keyPath.join('/') !== obj.__definitionPath.join('/')) {
                       name = generateName(
-                          name, obj.definitionPath, interfaces.map(it => it.name)
+                          name, obj.__definitionPath, interfaces.map(it => it.name)
                       );
                     }
                   }
@@ -169,7 +173,7 @@ export function generateData(config: ApiConfig, datas: Array<{
                     value,
                     level,
                     key,
-                    keyPath: obj.definitionPath
+                    keyPath: obj.__definitionPath
                   });
                 }
               }

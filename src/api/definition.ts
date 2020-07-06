@@ -1,6 +1,6 @@
 import toPascal from '../pascal';
 import {ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
-import Api, {METHODS_SUPPORT_FORM_DATA, Parameter} from './api';
+import Api, {DEFINITION_PATH_KEY, METHODS_SUPPORT_FORM_DATA, Parameter} from './api';
 import {Config} from './config';
 import {ApiDefinitionsResult, normalizeName} from './generate-api';
 import Interface from './interface';
@@ -118,26 +118,26 @@ export function generateApiDefinitions(data: SwaggerDoc,
       if (['GET', 'PUT', 'POST', 'DELETE'].includes(method)) {
         const typeDefinition: SwaggerAPI = pathDefinition[method.toLowerCase()];
         const api = new Api();
-        api.url = resolvePath(path);
-        api.summary = typeDefinition.summary;
-        api.method = method;
-        api.id = typeDefinition.operationId;
+        api.__url = resolvePath(path);
+        api.__summary = typeDefinition.summary;
+        api.__method = method;
+        api.__id = typeDefinition.operationId;
         // swagger自动生成的api的id格式为 java方法名+Using+请求方式，这里取Using之前的部分，即java方法名
-        api.name = api.id.substring(0, api.id.indexOf('Using'));
+        api.__name = api.__id.substring(0, api.__id.indexOf('Using'));
         // 将接口路径按/分割，并作为自定接口对象的多层次key
         const resolvedPath = resolveDefinitionPath(path);
-        if (resolvedPath.length > 0 && resolvedPath[resolvedPath.length - 1] === api.name) {
-          api.definitionPath = resolvedPath.slice(0, resolvedPath.length - 1);
+        if (resolvedPath.length > 0 && resolvedPath[resolvedPath.length - 1] === api.__name) {
+          api.__definitionPath = resolvedPath.slice(0, resolvedPath.length - 1);
         } else {
-          api.definitionPath = resolvedPath;
+          api.__definitionPath = resolvedPath;
         }
-        api.definitionPath.push(api.name);
+        api.__definitionPath.push(api.__name);
         // POST和PUT请求要判断请求的参数格式是json格式还是form表单的格式
         if (METHODS_SUPPORT_FORM_DATA.includes(method)) {
           const nonPathParameters = typeDefinition.parameters && typeDefinition.parameters.filter(it => it.in !== 'path') || [];
-          api.isFormData = !(nonPathParameters.length === 1 && nonPathParameters[0].in === 'body');
+          api.__isFormData = !(nonPathParameters.length === 1 && nonPathParameters[0].in === 'body');
         }
-        api.responseType = resolveResponseType(
+        api.__responseType = resolveResponseType(
             typeDefinition.responses['200']
         );
         if (typeDefinition.parameters && typeDefinition.parameters.length) {
@@ -147,7 +147,7 @@ export function generateApiDefinitions(data: SwaggerDoc,
               let type = findTypeByEnum(p.enum);
               if (!type) {
                 type = new Type();
-                type.name = toPascal(api.name) + normalizeName(toPascal(p.name));
+                type.name = toPascal(api.__name) + normalizeName(toPascal(p.name));
                 type.values = p.enum;
                 type.description = p.description;
                 addType(type);
@@ -188,7 +188,7 @@ export function generateApiDefinitions(data: SwaggerDoc,
                     type: 'string'
                   }));
                 } else {
-                  console.error(`接口${api.url}存在无法识别的参数${p.name}`);
+                  console.error(`接口${api.__url}存在无法识别的参数${p.name}`);
                 }
               }
             }
@@ -201,10 +201,10 @@ export function generateApiDefinitions(data: SwaggerDoc,
   const apiObject = {};
   apis.forEach(api => {
     let tmp = apiObject;
-    if (api.definitionPath.length){
-      api.definitionPath.forEach((dp, index) => {
+    if (api.__definitionPath.length){
+      api.__definitionPath.forEach((dp, index) => {
         if (!tmp[dp]) {
-          tmp[dp] = {definitionPath: api.definitionPath.slice(0, index)};
+          tmp[dp] = {[DEFINITION_PATH_KEY]: api.__definitionPath.slice(0, index)};
         }
         tmp = tmp[dp];
       });

@@ -1,9 +1,13 @@
 import toPascal from '../pascal';
 import {BodyParameter} from '../types/api-generate';
-import {generateName, normalizeName} from './generate-api';
+import {generateName, isApiObject, normalizeName} from './generate-api';
 import {RefObject} from './ref';
 
 export const METHODS_SUPPORT_FORM_DATA = ['POST', 'PUT', 'DELETE'];
+
+export const isApiProperty = (str: string) => {
+  return str.indexOf('__') === 0;
+};
 
 export class Parameter {
   public children: Parameter[] = [];
@@ -53,44 +57,50 @@ ${this.children.map(it => it.toString()).join(',\n')}
   }
 }
 
+export const DEFINITION_PATH_KEY = '__definitionPath';
+
 export default class Api {
-  public bodyParameter?: BodyParameter = null;
-  public definitionPath: any[];
-  public id?: string;
-  public isFormData?: boolean;
-  public method?: string;
-  public name?: string;
-  public parameters?: Parameter[];
-  public path?: string;
-  public responseType?: RefObject;
-  public summary?: string;
-  public type?: any;
-  public url?: string;
+  public __bodyParameter?: BodyParameter = null;
+  public __definitionPath: any[];
+  public __id?: string;
+  public __isFormData?: boolean;
+  public __method?: string;
+  public __name?: string;
+  public __parameters?: Parameter[];
+  public __path?: string;
+  public __responseType?: RefObject;
+  public __summary?: string;
+  public __type?: any;
+  public __url?: string;
 
   constructor() {
-    this.name = '';
-    this.summary = '';
-    this.definitionPath = [];
-    this.id = '';
-    this.bodyParameter = null;
-    this.url = '';
-    this.isFormData = false;
-    this.method = '';
-    this.parameters = [];
-    this.responseType = null;
+    this.__name = '';
+    this.__summary = '';
+    this.__definitionPath = [];
+    this.__id = '';
+    this.__bodyParameter = null;
+    this.__url = '';
+    this.__isFormData = false;
+    this.__method = '';
+    this.__parameters = [];
+    this.__responseType = null;
+  }
+
+  public _isApi() {
+    return true;
   }
 
   public addParameter(param: Parameter) {
     if (param.name.includes('.')) {
       const nameParts = param.name.split('.');
-      let parentParam: Parameter = this.parameters.find(it => it.name === nameParts[0]) ||
+      let parentParam: Parameter = this.__parameters.find(it => it.name === nameParts[0]) ||
           new Parameter({
             name: nameParts[0],
             required: param.required,
             type: 'any',
             in: param.in
           });
-      if (!this.parameters.some(it => it.name === nameParts[0])) {
+      if (!this.__parameters.some(it => it.name === nameParts[0])) {
         this.addParameter(parentParam);
       }
       if (param.required) {
@@ -111,21 +121,21 @@ export default class Api {
           parentParam = tmpParam;
         }
       });
-    } else if (!this.parameters.some(it => it.name === param.name)) {
-      this.parameters.push(param);
+    } else if (!this.__parameters.some(it => it.name === param.name)) {
+      this.__parameters.push(param);
     }
   }
 
   public toString() {
     return `{
-    url: ${this.path},
-    method: ${this.type},
+    url: ${this.__path},
+    method: ${this.__type},
     errorHandleType: 'custom'
     }`;
   }
 
   setBodyParameter(parameter: Parameter) {
-    this.bodyParameter = parameter;
+    this.__bodyParameter = parameter;
   }
 }
 
@@ -134,25 +144,41 @@ export function toAPIString(obj) {
   return lines.map((it, index) => index > 0 && index < lines.length - 1 ? `  ${it}` : it).join('\n');
 }
 
-export function toAPIString2(obj, level = 0) {
+function hasSubApis(obj: Api): boolean {
+  return Object.keys(obj).filter(it => !isApiProperty(it)).length > 0;
+}
+
+function getSubApis(obj: Api): { [key: string]: Api } {
+  return Object.fromEntries(Object.keys(obj).filter(it => !isApiProperty(it)).map(key => {
+    return [key, obj[key]];
+  }));
+}
+
+export function toAPIString2(obj: Api, level = 0) {
   let str = '';
   const space = ' '.repeat(2 * level);
   if (typeof obj === 'object') {
     str += '{\n';
     const keys = Object.keys(obj);
-    if (keys.includes('url') && keys.includes('method')) {
-      str += space + `url: '${obj.url}',\n${space}method: '${obj.method}'`;
-      if (METHODS_SUPPORT_FORM_DATA.includes(obj.method)) {
-        str += `,\n${space}isFormData: ${obj.isFormData}`;
+    if (isApiObject(obj)) {
+      str += space + `url: '${obj.__url}',\n${space}method: '${obj.__method}'`;
+      if (METHODS_SUPPORT_FORM_DATA.includes(obj.__method)) {
+        str += `,\n${space}isFormData: ${obj.__isFormData}`;
       }
-      if (obj.parameters.length === 1 && ['string', 'number'].includes(obj.parameters[0].type)) {
-        str += `,\n${space}requestData(${obj.parameters[0].name}: ${obj.parameters[0].type}) {
-${space}  return this.r({${obj.parameters[0].name}});
+      if (obj.__parameters.length === 1 && ['string', 'number'].includes(obj.__parameters[0].type)) {
+        str += `,\n${space}requestData(${obj.__parameters[0].name}: ${obj.__parameters[0].type}) {
+${space}  return this.r({${obj.__parameters[0].name}});
 ${space}}`;
+      }
+      const subApis = getSubApis(obj);
+      if (Object.keys(subApis).length) {
+        Object.keys(subApis).forEach(key => {
+          str += `,\n${space}${key}: ${toAPIString2(subApis[key], level + 1)}`;
+        });
       }
       str += `\n${' '.repeat(2 * (level - 1))}}`;
     } else {
-      str += `${space}${keys.filter(it => it !== 'definitionPath').map(key => {
+      str += `${space}${keys.filter(it => !isApiProperty(it)).map(key => {
         const value = obj[key];
         if (typeof value === 'object') {
           return `${normalizeName(key)}: ${toAPIString2(value, level + 1)}`;
@@ -174,28 +200,44 @@ ${space}}`;
 
 const apiNames = [];
 
+function createApiDefinitionInterfaceName(key: string, parentKey: string, obj: Api) {
+  let name = toPascal(key) + 'API<T>';
+  if (parentKey) {
+    name = toPascal(parentKey) + name;
+  }
+  name = normalizeName(name);
+  if (apiNames.includes(name)) {
+    name = generateName(name, obj.__definitionPath || [], apiNames);
+  }
+  apiNames.push(name);
+  return name;
+}
+
 export function toDefinitionString(obj: Api, level: number = 0, parentKey: string = null) {
   let str = '';
   if (typeof obj === 'object') {
-    if (obj.method && obj.url) {
-      if (obj.parameters.length === 1 && obj.parameters[0].type === 'string') {
+    if (!hasSubApis(obj)) {
+      // if (obj.hasSubmApis && obj.hasSubmApis()) {
+      //   console.log(111)
+      // }
+      if (obj.__parameters.length === 1 && obj.__parameters[0].type === 'string') {
         str += 'StringIdAPI<T';
-      } else if (obj.parameters.length === 1 && obj.parameters[0].type === 'number') {
+      } else if (obj.__parameters.length === 1 && obj.__parameters[0].type === 'number') {
         str += 'NumberIdAPI<T';
       } else {
         str += 'GenericAPI<T';
       }
-      if (obj.responseType) {
-        str += `, ${obj.responseType.toString()}`;
+      if (obj.__responseType) {
+        str += `, ${obj.__responseType.toString()}`;
       }
-      if (obj.bodyParameter) {
-        if (obj.parameters.length) {
+      if (obj.__bodyParameter) {
+        if (obj.__parameters.length) {
           console.error('混合参数无法解析');
         } else {
-          str += ', ' + obj.bodyParameter.type;
+          str += ', ' + obj.__bodyParameter.type;
         }
-      } else if (obj.parameters.length) {
-        str += ', ' + createParametersType(obj.parameters);
+      } else if (obj.__parameters.length) {
+        str += ', ' + createParametersType(obj.__parameters);
       }
       str += '>';
     } else {
@@ -203,25 +245,17 @@ export function toDefinitionString(obj: Api, level: number = 0, parentKey: strin
       str += '{';
       const keys = Object.keys(obj);
       if (keys.length) {
-        str += `\n${keys.filter(it => it !== 'definitionPath').map((key: string) => {
-          const value = obj[key];
+        str += `\n${keys.filter(it => !isApiProperty(it)).map((key: string) => {
+          const value: Api = obj[key];
           if (typeof value === 'object') {
-            if (value.method && value.url) {
+            if (isApiObject(value)) {
               return `${space}/**
-${space} * ${value.summary}
+${space} * ${value.__summary}
 ${space} */
 ${space}${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
             } else {
               if (level === 0) {
-                let name = toPascal(key) + 'API<T>';
-                if (parentKey) {
-                  name = toPascal(parentKey) + name;
-                }
-                name = normalizeName(name);
-                if (apiNames.includes(name)) {
-                  name = generateName(name, obj.definitionPath || [], apiNames);
-                }
-                apiNames.push(name);
+                let name = createApiDefinitionInterfaceName(key, parentKey, obj);
                 return `  ${normalizeName(key)}: ${name}`;
               } else {
                 return `  ${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
