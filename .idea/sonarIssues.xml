@@ -3,6 +3,46 @@
   <component name="issues">
     <option name="index">
       <map>
+        <entry key="D:/workspace/aegis/OaPage/node_modules/aegis-dev-tools/dist/api/type.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="D:/workspace/aegis/OaPage/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="D:/workspace/aegis/OaPage/src/api/api-definition.ts">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="D:/workspace/aegis/OaPage/src/types/api-beans.d.ts">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="D:/workspace/aegis/OaPage/src/types/api-definition.d.ts">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="D:/workspace/aegis/OaPage/src/views/admin/cost/sheet/edit.vue">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="D:/workspace/aegis/OaPage/src/views/admin/hr/recruit/evaluation.vue">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="D:/workspace/aegis/OaPage/src/views/admin/hr/staff/list.tsx">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../aegis-tools-copy/src/api/api.ts">
           <value>
             <set />
@@ -34,6 +74,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/definition.ts.tmpl">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/dist/api/api.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/dist/api/ref.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/dist/execute.js">
           <value>
             <set />
           </value>

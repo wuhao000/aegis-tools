@@ -1,4 +1,4 @@
-import {RefObject, resolveRef, resolveRefObject} from '@/api/ref';
+import {RefObject, resolveRef, resolveRefObject} from './ref';
 import {SwaggerResponse} from '@/types/swagger';
 
 export const types: Type[] = [];
