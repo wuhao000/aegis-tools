@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
-console.log('生成路由中...');
+console.info('生成路由中...');
 const renderTemplate = require('./tmpl').render;
 const components = require('./components');
 const types = distinct(components.map(it => it.type));
@@ -41,4 +41,4 @@ function createRoutesForType(type, typeComponents) {
     });
     fs_1.default.writeFileSync(`src/router/${type}.ts`, routerTmpl);
 }
-console.log('生成路由完成');
+console.info('生成路由完成');

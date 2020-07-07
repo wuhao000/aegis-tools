@@ -1,5 +1,5 @@
-import {resolveRef} from './ref';
 import {ApiDefinitions, SwaggerResponse} from '../../types/swagger';
+import {resolveRef} from './ref';
 
 export default class Type {
   public description: string;
@@ -17,7 +17,7 @@ export default class Type {
   toString() {
 
     return `${this.description ? '/**\n * ' + this.description + '\n */\n'
-        : ''}type ${this.name} = ${this.values.map(v => {
+      : ''}type ${this.name} = ${this.values.map(v => {
       if (this.type === 'number') {
         return `${v}`;
       } else {
@@ -45,12 +45,18 @@ export function resolveType(propertyType: string, propertyDefinition?) {
         type = resolveType(propertyDefinition.items.type, propertyDefinition) + '[]';
       }
     }
+  } else if (propertyType === 'map') {
+    if (propertyDefinition.genericType) {
+      return resolveRef(pure(propertyDefinition.genericType));
+    } else {
+      return '{[key: string]: any}';
+    }
   } else {
     if (propertyDefinition && propertyDefinition.genericRef) {
       type = propertyDefinition.genericRef.simpleRef;
     } else {
       if (propertyType === 'object') {
-        type = 'object';
+        type = 'any';
       }
     }
   }
@@ -62,7 +68,7 @@ export function resolveResponseType(response: SwaggerResponse, definitions: ApiD
     if (response.schema.genericRef) {
       // 将«»替换为<>
       let ref = pure(response.schema.genericRef.simpleRef);
-      return resolveRef(ref, definitions);
+      return resolveRef(ref);
     } else if (response.schema.items) {
       if (response.schema.items.genericRef.simpleRef) {
         return response.schema.items.genericRef.simpleRef + '[]';

@@ -3,7 +3,7 @@ import {ApiDefinitions} from '../../types/swagger';
 /**
  * 解析swagger中的类型对应的ts类型
  */
-export function resolveRef(ref: string, definitions: ApiDefinitions) {
+export function resolveRef(ref: string) {
   // Response只取data部分
   return resolveInner(ref.replace(/Response<(.*?)>/i, '$1')
       .replace(/ResponseSimpleEnum<(.*?)>/i, '$1')).replace(/_{/g, '<')

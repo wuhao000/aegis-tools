@@ -28,5 +28,5 @@ const componentsDefContent = importString + '\n\n' + classString + '\n';
 const packageDefPath = 'types/aegis-ui.d.ts';
 
 fs.writeFileSync(packageDefPath, componentsDefContent);
-console.log('生成typescript定义文件完成');
+console.info('生成typescript定义文件完成');
 module.exports = {};

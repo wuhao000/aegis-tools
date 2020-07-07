@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * 解析swagger中的类型对应的ts类型
  */
-function resolveRef(ref, definitions) {
+function resolveRef(ref) {
     // Response只取data部分
     return resolveInner(ref.replace(/Response<(.*?)>/i, '$1')
         .replace(/ResponseSimpleEnum<(.*?)>/i, '$1')).replace(/_{/g, '<')

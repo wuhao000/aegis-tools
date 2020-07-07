@@ -33,6 +33,9 @@ function pureDefinitions(definitions) {
     });
     return res;
 }
+function isSimpleType(type) {
+    return !type.includes('{') && !type.includes('[') && !type.includes('<');
+}
 /**
  * 生成类型定义
  * @param {ApiConfig[]} config
@@ -72,17 +75,17 @@ async function generateApi(config) {
             const propertyDefinitions = definition.properties;
             if (definition.properties) {
                 const properties = Object.keys(definition.properties);
-                properties.forEach(p => {
-                    const propertyDefinition = propertyDefinitions[p];
+                properties.forEach(fieldName => {
+                    const propertyDefinition = propertyDefinitions[fieldName];
                     const propertyType = propertyDefinition.type;
                     const type = type_1.resolveType(propertyType, propertyDefinition);
-                    if (!p.includes('-')) {
+                    if (!fieldName.includes('-')) {
                         let propertyType = type_1.pure(type);
                         propertyType = propertyType.includes('<') ? 'any' : propertyType;
                         let enumType = '';
                         if (propertyDefinition.enum) {
                             const type = new type_1.default();
-                            type.name = toPascal(inter.name) + toPascal(p);
+                            type.name = toPascal(inter.name) + toPascal(fieldName);
                             type.type = propertyType;
                             type.values = propertyDefinition.enum;
                             type.description = propertyDefinition.description;
@@ -92,7 +95,7 @@ async function generateApi(config) {
                             enumType = type.name;
                         }
                         inter.properties.push({
-                            name: p,
+                            name: fieldName,
                             type: enumType ? enumType : propertyType,
                             description: propertyDefinition.description ? propertyDefinition.description : ''
                         });
@@ -102,6 +105,7 @@ async function generateApi(config) {
                     if (inter.name.includes('<')) { // 处理带有泛型的情况
                         const typeParameterString = inter.name.substring(inter.name.indexOf('<') + 1, inter.name.length - 1);
                         inter.name = inter.name.substring(0, inter.name.indexOf('<'));
+                        // 解析泛型参数，泛型参数必须通过配置指定泛型对应的属性，否则无法识别
                         if (config.typeParameterReflects) {
                             const reflect = config.typeParameterReflects.find(it => it.name === inter.name);
                             if (reflect) {
@@ -134,8 +138,6 @@ async function generateApi(config) {
                             }
                             else {
                                 console.error(`数据类型【${inter.name}】包含泛型参数，但是缺少泛型映射配置`);
-                                // console.log(definition);
-                                // console.log(inter);
                             }
                         }
                         else {
@@ -235,10 +237,17 @@ async function generateApi(config) {
                                     };
                                 }
                                 else if (p.schema.items) {
+                                    let genericType = '';
+                                    if (p.schema.items.genericRef) {
+                                        genericType = type_1.pure(p.schema.items.genericRef.simpleRef);
+                                    }
+                                    else {
+                                        genericType = p.schema.items.type;
+                                    }
                                     api.bodyParameter = {
                                         name: p.name,
                                         required: true,
-                                        type: 'Array<' + type_1.pure(p.schema.items.genericRef.simpleRef) + '>'
+                                        type: isSimpleType(genericType) ? (genericType + '[]') : ('Array<' + genericType + '>')
                                     };
                                 }
                             }
@@ -250,7 +259,6 @@ async function generateApi(config) {
         });
         const apiObject = {};
         apis.forEach(api => {
-            // console.log(api.definitionPath);
             let tmp = apiObject;
             api.definitionPath.forEach(dp => {
                 if (!tmp[dp]) {
@@ -260,7 +268,6 @@ async function generateApi(config) {
             });
             Object.assign(tmp, api);
         });
-        // console.log(apiObject);
         return {
             apis,
             apiObject

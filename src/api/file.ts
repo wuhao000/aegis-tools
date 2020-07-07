@@ -14,10 +14,10 @@ export function writeFile(config: ApiConfig, types: Type[], beanInterfaces: Inte
       });
   const str = toString(apiObject);
   fs.writeFile(`${config.apiRoot}/definition.ts`, `import {GeneratedApis} from '../types/api-definition';
-import {ApiDef} from 'aegis-ui';
+import {ApiDef} from 'aegis-ui-desktop';
 export default ${str} as GeneratedApis<ApiDef>;\n`, () => {
   });
-  fs.writeFile(`${config.typeRoot}/api-definition.d.ts`, `import {GenericAPI, StringIdAPI, NumberIdAPI} from 'aegis-ui';
+  fs.writeFile(`${config.typeRoot}/api-definition.d.ts`, `import {GenericAPI, StringIdAPI, NumberIdAPI} from 'aegis-ui-desktop';
 ${apiImportList.map(it => it.toString()).join('\n')}
 
 interface GeneratedApis<T> ${toDefinitionString(apiObject)}

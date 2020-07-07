@@ -42,13 +42,21 @@ function resolveType(propertyType, propertyDefinition) {
             }
         }
     }
+    else if (propertyType === 'map') {
+        if (propertyDefinition.genericType) {
+            return ref_1.resolveRef(pure(propertyDefinition.genericType));
+        }
+        else {
+            return '{[key: string]: any}';
+        }
+    }
     else {
         if (propertyDefinition && propertyDefinition.genericRef) {
             type = propertyDefinition.genericRef.simpleRef;
         }
         else {
             if (propertyType === 'object') {
-                type = 'object';
+                type = 'any';
             }
         }
     }
@@ -60,7 +68,7 @@ function resolveResponseType(response, definitions) {
         if (response.schema.genericRef) {
             // 将«»替换为<>
             let ref = pure(response.schema.genericRef.simpleRef);
-            return ref_1.resolveRef(ref, definitions);
+            return ref_1.resolveRef(ref);
         }
         else if (response.schema.items) {
             if (response.schema.items.genericRef.simpleRef) {

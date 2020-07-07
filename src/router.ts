@@ -1,7 +1,7 @@
 import fs from 'fs';
 import {Component} from './components';
 
-console.log('生成路由中...');
+console.info('生成路由中...');
 const renderTemplate = require('./tmpl').render;
 const components: Component[] = require('./components');
 const types = distinct(components.map(it => it.type));
@@ -43,4 +43,4 @@ function createRoutesForType(type: string, typeComponents: Component[]) {
   fs.writeFileSync(`src/router/${type}.ts`, routerTmpl);
 }
 
-console.log('生成路由完成');
+console.info('生成路由完成');

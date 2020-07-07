@@ -44,7 +44,7 @@ function getScript(component) {
 module.exports.resolveProps = (component) => {
     const script = getScript(component);
     if (script) {
-        console.log(`为${component.name}生成props.md...`);
+        console.info(`为${component.name}生成props.md...`);
         const propReg = new RegExp(reg, 'g');
         const res = script.match(propReg);
         if (res) {
@@ -53,7 +53,7 @@ module.exports.resolveProps = (component) => {
                 createPropsMarkdown(component, resolveProps);
             }
         }
-        console.log(`为${component.name}生成props.md完成`);
+        console.info(`为${component.name}生成props.md完成`);
     }
 };
 /**

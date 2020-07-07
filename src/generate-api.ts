@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import jsBeautify from 'js-beautify';
 import {ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
 import Api from './api/api';
 import {beanDefFileName, writeFile} from './api/file';
@@ -38,6 +39,10 @@ function pureDefinitions(definitions: ApiDefinitions): ApiDefinitions {
 }
 
 
+function isSimpleType(type: string) {
+  return !type.includes('{') && !type.includes('[') && !type.includes('<');
+}
+
 /**
  * 生成类型定义
  * @param {ApiConfig[]} config
@@ -64,7 +69,7 @@ async function generateApi(config: ApiConfig) {
   }
   const apiImportList: ImportDeclaration[] = [];
   apiImportList.push(new ImportDeclaration(
-      null, beanInterfaces.map(it => it.name), `./${beanDefFileName}`
+    null, beanInterfaces.map(it => it.name), `./${beanDefFileName}`
   ));
   writeFile(config, types, beanInterfaces, toString, apiObject, apiImportList, toDefinitionString, apiInterfaces);
 
@@ -81,17 +86,17 @@ async function generateApi(config: ApiConfig) {
       const propertyDefinitions = definition.properties;
       if (definition.properties) {
         const properties = Object.keys(definition.properties);
-        properties.forEach(p => {
-          const propertyDefinition = propertyDefinitions[p];
+        properties.forEach(fieldName => {
+          const propertyDefinition = propertyDefinitions[fieldName];
           const propertyType = propertyDefinition.type;
           const type = resolveType(propertyType, propertyDefinition);
-          if (!p.includes('-')) {
+          if (!fieldName.includes('-')) {
             let propertyType = pure(type);
             propertyType = propertyType.includes('<') ? 'any' : propertyType;
             let enumType = '';
             if (propertyDefinition.enum) {
               const type = new Type();
-              type.name = toPascal(inter.name) + toPascal(p);
+              type.name = toPascal(inter.name) + toPascal(fieldName);
               type.type = propertyType;
               type.values = propertyDefinition.enum;
               type.description = propertyDefinition.description;
@@ -101,7 +106,7 @@ async function generateApi(config: ApiConfig) {
               enumType = type.name;
             }
             inter.properties.push({
-              name: p,
+              name: fieldName,
               type: enumType ? enumType : propertyType,
               description: propertyDefinition.description ? propertyDefinition.description : ''
             });
@@ -111,6 +116,7 @@ async function generateApi(config: ApiConfig) {
           if (inter.name.includes('<')) { // 处理带有泛型的情况
             const typeParameterString = inter.name.substring(inter.name.indexOf('<') + 1, inter.name.length - 1);
             inter.name = inter.name.substring(0, inter.name.indexOf('<'));
+            // 解析泛型参数，泛型参数必须通过配置指定泛型对应的属性，否则无法识别
             if (config.typeParameterReflects) {
               const reflect = config.typeParameterReflects.find(it => it.name === inter.name);
               if (reflect) {
@@ -140,8 +146,6 @@ async function generateApi(config: ApiConfig) {
                 }
               } else {
                 console.error(`数据类型【${inter.name}】包含泛型参数，但是缺少泛型映射配置`);
-                // console.log(definition);
-                // console.log(inter);
               }
             } else {
               console.error(`数据类型【${inter.name}】包含泛型参数，但是缺少泛型映射配置`);
@@ -212,7 +216,7 @@ async function generateApi(config: ApiConfig) {
             api.isFormData = !(nonPathParameters.length === 1 && nonPathParameters[0].in === 'body');
           }
           const responseType = resolveResponseType(
-              typeDefinition.responses['200'], definitions
+            typeDefinition.responses['200'], definitions
           );
           if (responseType) {
             api.responseType = responseType;
@@ -244,10 +248,16 @@ async function generateApi(config: ApiConfig) {
                     type: toPascal(pure(p.schema.genericRef.simpleRef))
                   };
                 } else if (p.schema.items) {
+                  let genericType = '';
+                  if (p.schema.items.genericRef) {
+                    genericType = pure(p.schema.items.genericRef.simpleRef);
+                  } else {
+                    genericType = p.schema.items.type;
+                  }
                   api.bodyParameter = {
                     name: p.name,
                     required: true,
-                    type: 'Array<' + pure(p.schema.items.genericRef.simpleRef) + '>'
+                    type: isSimpleType(genericType) ? (genericType + '[]') : ('Array<' + genericType + '>')
                   };
                 }
               }
@@ -259,7 +269,6 @@ async function generateApi(config: ApiConfig) {
     });
     const apiObject = {};
     apis.forEach(api => {
-      // console.log(api.definitionPath);
       let tmp = apiObject;
       api.definitionPath.forEach(dp => {
         if (!tmp[dp]) {
@@ -269,7 +278,6 @@ async function generateApi(config: ApiConfig) {
       });
       Object.assign(tmp, api);
     });
-    // console.log(apiObject);
     return {
       apis,
       apiObject
