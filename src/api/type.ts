@@ -1,5 +1,26 @@
-import {ApiDefinitions, SwaggerResponse} from '../../types/swagger';
-import {resolveRef} from './ref';
+import {RefObject, resolveRef, resolveRefObject} from '@/api/ref';
+import {SwaggerResponse} from '@/types/swagger';
+
+export const types: Type[] = [];
+
+export function findTypeByEnum(values: any[]): Type | undefined {
+  return types.find(t => hasSameItems(t.values, values));
+}
+
+export function addType(type: Type) {
+  if (!types.some(t => t.name === type.name)
+      && !types.some(t => hasSameItems(t.values, type.values))) {
+    types.push(type);
+  }
+}
+
+function hasSameItems(a: any[], b: any[]) {
+  if (a.length !== b.length) {
+    return false;
+  }
+  return !(a.some(it => !b.includes(it)) || b.some(it => !a.includes(it)));
+
+}
 
 export default class Type {
   public description: string;
@@ -15,20 +36,19 @@ export default class Type {
   }
 
   toString() {
-
     return `${this.description ? '/**\n * ' + this.description + '\n */\n'
-      : ''}type ${this.name} = ${this.values.map(v => {
+        : ''}export type ${this.name} = ${this.values.map(v => {
       if (this.type === 'number') {
         return `${v}`;
       } else {
         return `'${v}'`;
       }
-    }).join(' | ')};`;
+    }).join('\n    | ')};`;
   }
 }
 
 
-export function resolveType(propertyType: string, propertyDefinition?) {
+export function resolveType(propertyType: string, propertyDefinition?): string {
   let type = 'any';
   if (['string', 'boolean', 'number'].includes(propertyType)) {
     type = propertyType;
@@ -47,7 +67,7 @@ export function resolveType(propertyType: string, propertyDefinition?) {
     }
   } else if (propertyType === 'map') {
     if (propertyDefinition.genericType) {
-      return resolveRef(pure(propertyDefinition.genericType));
+      return resolveRef(pure(propertyDefinition.genericType)).toString();
     } else {
       return '{[key: string]: any}';
     }
@@ -60,23 +80,30 @@ export function resolveType(propertyType: string, propertyDefinition?) {
       }
     }
   }
+  if  (typeof type !== 'string') {
+    console.log(type)
+  }
   return type;
 }
 
-export function resolveResponseType(response: SwaggerResponse, definitions: ApiDefinitions) {
+export function resolveResponseType(response: SwaggerResponse): RefObject {
   if (response.schema) {
-    if (response.schema.genericRef) {
+    if (response.schema.genericRef || response.schema.$ref) {
       // 将«»替换为<>
-      let ref = pure(response.schema.genericRef.simpleRef);
+      let ref = pure((response.schema.genericRef && response.schema.genericRef.simpleRef) || response.schema.$ref.replace('#/definitions/', ''));
       return resolveRef(ref);
     } else if (response.schema.items) {
-      if (response.schema.items.genericRef.simpleRef) {
-        return response.schema.items.genericRef.simpleRef + '[]';
+      if (response.schema.items.genericRef && response.schema.items.genericRef.simpleRef) {
+        const refObj = resolveRefObject(response.schema.items.genericRef.simpleRef);
+        refObj.isEnum = true;
+        return refObj;
+      } else if (response.schema.items.$ref) {
+        const refObj = resolveRefObject(response.schema.items.$ref);
+        refObj.isEnum = true;
+        return refObj;
       }
-      console.debug('无法识别response类型：');
-      console.log(response);
+      console.error('无法识别response类型：' + JSON.stringify(response));
     }
-  } else {
   }
   return undefined;
 }
@@ -86,5 +113,5 @@ export function pure(ref): string {
   // if (!/^[a-zA-Z0-9<>\[\],]+$/i.test(res)) {
   //   console.log(res);
   // }
-  return ref.replace(/«/g, '<').replace(/»/g, '>');
+  return ref.replace('#/definitions/', '').replace(/«/g, '<').replace(/»/g, '>');
 }

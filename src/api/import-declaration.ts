@@ -11,7 +11,7 @@ export default class ImportDeclaration {
 
   public toString(): string {
     return 'import ' + (this.name ? this.name : `{
-  ${this.members.join(',\n\t')}
+  ${this.members.filter(it => it && it.length > 0).join(',\n  ')}
 } from '${this.module}';`);
   }
 }

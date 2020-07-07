@@ -31,33 +31,6 @@
     <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="html" />
     <option name="HTML_INLINE_ELEMENTS" value="abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,input,kbd,label,q,s,samp,select,span,strike,strong,sub,sup,textarea,tt,u,var,el-checkbox,el-button,el-radio," />
     <option name="HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT" value="title,h1,h2,h3,h4,h5,h6,p,el-button,th" />
-    <DB2CodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </DB2CodeStyleSettings>
-    <DerbyCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </DerbyCodeStyleSettings>
-    <H2CodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </H2CodeStyleSettings>
-    <HSQLCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </HSQLCodeStyleSettings>
-    <HTMLCodeStyleSettings>
-      <option name="HTML_KEEP_BLANK_LINES" value="0" />
-      <option name="HTML_ELEMENTS_TO_INSERT_NEW_LINE_BEFORE" value="body,div,p,form,h1,h2,h3,a,img,span" />
-      <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="html" />
-      <option name="HTML_INLINE_ELEMENTS" value="abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,img,input,kbd,label,q,s,samp,select,span,strike,strong,sub,sup,textarea,tt,u,var,el-checkbox,el-button,el-radio," />
-      <option name="HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT" value="title,h1,h2,h3,h4,h5,h6,p,el-button,th" />
-    </HTMLCodeStyleSettings>
     <JSCodeStyleSettings version="0">
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
       <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
@@ -91,44 +64,15 @@
     <JetCodeStyleSettings>
       <option name="ALIGN_IN_COLUMNS_CASE_BRANCH" value="true" />
     </JetCodeStyleSettings>
-    <MSSQLCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </MSSQLCodeStyleSettings>
-    <MySQLCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </MySQLCodeStyleSettings>
-    <OracleCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </OracleCodeStyleSettings>
-    <PostgresCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </PostgresCodeStyleSettings>
-    <SQLiteCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </SQLiteCodeStyleSettings>
     <SqlCodeStyleSettings version="2">
       <option name="KEYWORD_CASE" value="0" />
       <option name="TYPE_CASE" value="3" />
       <option name="IDENTIFIER_CASE" value="1" />
     </SqlCodeStyleSettings>
-    <SybaseCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
-      <option name="TYPE_CASE" value="3" />
-      <option name="IDENTIFIER_CASE" value="1" />
-    </SybaseCodeStyleSettings>
     <TypeScriptCodeStyleSettings version="0">
       <option name="JSDOC_INCLUDE_TYPES" value="true" />
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
+      <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
       <option name="USE_DOUBLE_QUOTES" value="false" />
       <option name="FORCE_QUOTE_STYlE" value="true" />
       <option name="ENFORCE_TRAILING_COMMA" value="Remove" />
@@ -146,153 +90,12 @@
         <option name="SMART_TABS" value="true" />
       </indentOptions>
     </codeStyleSettings>
-    <codeStyleSettings language="DB2">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="Derby">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="H2">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="HSQLDB">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
     <codeStyleSettings language="HTML">
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
         <option name="TAB_SIZE" value="2" />
       </indentOptions>
-      <arrangement>
-        <rules>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <XML_ATTRIBUTE />
-                </AND>
-              </match>
-              <order>BY_VUE_ATTR</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_FILE_ROOT_TAG>true</VUE_FILE_ROOT_TAG>
-                </AND>
-              </match>
-              <order>BY_VUE_ROOT_TAG</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <XML_TAG />
-                </AND>
-              </match>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_MODEL>true</VUE_MODEL>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_PROP>true</VUE_PROP>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_DATA_FIELD>true</VUE_DATA_FIELD>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_COMPUTED>true</VUE_COMPUTED>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_WATCH>true</VUE_WATCH>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_LIFE_HOOK>true</VUE_LIFE_HOOK>
-                </AND>
-              </match>
-              <order>BY_VUE_LIFE_HOOK</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_METHOD>true</VUE_METHOD>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <VUE_RENDER>true</VUE_RENDER>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-        </rules>
-      </arrangement>
     </codeStyleSettings>
     <codeStyleSettings language="JAVA">
       <option name="RIGHT_MARGIN" value="120" />
@@ -888,49 +691,7 @@
         </rules>
       </arrangement>
     </codeStyleSettings>
-    <codeStyleSettings language="MySQL">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="Oracle">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="PostgreSQL">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
     <codeStyleSettings language="SQL">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="SQLite">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="Sybase">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="2" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="2" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="TSQL">
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="4" />

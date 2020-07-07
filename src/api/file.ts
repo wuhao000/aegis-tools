@@ -1,30 +1,31 @@
-import ImportDeclaration from './import-declaration';
-import Interface from './interface';
-import Type from './type';
-import {ApiConfig} from '../generate-api';
+import {render} from '../tmpl';
+import {toAPIString} from './api';
+import {APIData} from './generate-api';
+import {types} from './type';
+
 const fs = require('fs');
 export const beanDefFileName = 'api-beans';
 
-export function writeFile(config: ApiConfig, types: Type[], beanInterfaces: Interface[], toString, apiObject: object, apiImportList: ImportDeclaration[], toDefinitionString, apiInterfaces) {
-  const filePath = `${config.typeRoot}/${beanDefFileName}.d.ts`;
+export function writeFile(data: APIData) {
+  const filePath = `${data.config.typeRoot}/${beanDefFileName}.d.ts`;
   fs.writeFile(filePath,
-      types.map(type => type.toString()).join('\n\n') +
-      '\n\n' +
-      beanInterfaces.map(i => i.toString()).join('\n\n'), () => {
+      `${types.map(type => type.toString()).join('\n\n')}
+
+${data.interfaces.map(i => i.toString()).join('\n\n')}`, () => {
       });
-  const str = toString(apiObject);
-  fs.writeFile(`${config.apiRoot}/definition.ts`, `import {GeneratedApis} from '../types/api-definition';
-import {ApiDef} from 'aegis-ui-desktop';
-export default ${str} as GeneratedApis<ApiDef>;\n`, () => {
-  });
-  fs.writeFile(`${config.typeRoot}/api-definition.d.ts`, `import {GenericAPI, StringIdAPI, NumberIdAPI} from 'aegis-ui-desktop';
-${apiImportList.map(it => it.toString()).join('\n')}
+  const str = toAPIString(data.apiObject);
+  fs.writeFile(`${data.config.apiRoot}/api-definition.ts`,
+      render(data.config.templates && data.config.templates.definition || 'node_modules/aegis-dev-tools/src/tmpl/definition.ts.tmpl', {
+        content: str
+      }), () => {
+      });
+  fs.writeFile(`${data.config.typeRoot}/api-definition.d.ts`, `import {GenericAPI, StringIdAPI, NumberIdAPI, API} from 'aegis-api-proxy';
+${data.imports.map(it => it.toString()).join('\n')}
 
-interface GeneratedApis<T> ${toDefinitionString(apiObject)}
+interface GeneratedApis<T> ${data.generatedApisBody}
 
-${apiInterfaces.map(a => {
-    return `export interface ${a.name} ${a.body}`;
-  }).join('\n\n')}
-`, () => {
+${data.apiInterfaces.map(a => {
+    return `export interface ${a.name.toString()} ${a.extendsApi ? (`extends ${a.extendsApi}`) : ''} ${a.body}`;
+  }).join('\n\n')}`, () => {
   });
 }
