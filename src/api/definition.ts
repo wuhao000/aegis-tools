@@ -1,10 +1,9 @@
 import toPascal from '../pascal';
-import {ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
-import Api, {DEFINITION_PATH_KEY, METHODS_SUPPORT_FORM_DATA, Parameter} from './api';
+import {ApiDefinition, ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
+import Api, {METHODS_SUPPORT_FORM_DATA, Parameter} from './api';
 import {Config} from './config';
 import {ApiDefinitionsResult, normalizeName} from './generate-api';
-import Interface from './interface';
-import {RefObject} from './ref';
+import Interface, {InterfaceProperty} from './interface';
 import Type, {addType, findTypeByEnum, pure, resolveResponseType, resolveType} from './type';
 
 export function generateBeanDefinitions(definitions: ApiDefinitions, config: Config): Interface[] {
@@ -19,72 +18,42 @@ export function generateBeanDefinitions(definitions: ApiDefinitions, config: Con
   }
 
   keys.forEach(key => {
-    const definition = definitions[key];
+    const definition: ApiDefinition = definitions[key];
     const inter = new Interface();
     inter.setName(toPascal(pure(key)));
     const propertyDefinitions = definition.properties;
+
     if (definition.properties) {
       const properties = Object.keys(definition.properties);
       properties.forEach(prop => {
         const propertyDefinition = propertyDefinitions[prop];
-        const propertyType = propertyDefinition.type;
+        const propertyType = pure(propertyDefinition.type);
         const type = resolveType(propertyType, propertyDefinition);
         if (!prop.includes('-')) {
-          let propertyType = pure(type);
-          propertyType = propertyType.includes('<') ? 'any' : propertyType;
           let enumType = '';
           if (propertyDefinition.enum) {
             let type = findTypeByEnum(propertyDefinition.enum);
             if (!type) {
               type = new Type();
               type.name = inter.name + toPascal(prop);
-              type.type = propertyType;
+              type.setType(propertyType);
               type.values = propertyDefinition.enum;
               type.description = propertyDefinition.description;
               addType(type);
             }
             enumType = type.name;
           }
-          inter.properties.push({
-            name: prop,
-            type: enumType ? enumType : propertyType,
-            description: propertyDefinition.description ? propertyDefinition.description : ''
-          });
+          inter.properties.push(new InterfaceProperty(
+              prop,
+              enumType ? enumType : type,
+              propertyDefinition.description ? propertyDefinition.description : ''
+          ));
         }
       });
       if (!inter.unwrap) {
         if (inter.name.typeParameters.length) { // 处理带有泛型的情况
-          if (config.typeParameterReflects) {
-            const reflect = config.typeParameterReflects.find(it => it.name === inter.name.name);
-            if (reflect) {
-              const typeChars = ['T', 'S', 'U', 'V', 'P', 'M'];
-              const typeParameters = inter.name.typeParameters;
-              const properties = typeParameters.map((it, index) => {
-                inter.name.typeParameters[index] = new RefObject(typeChars[index]);
-                const property = inter.properties.find(it => it.name === reflect.typeProperties[index]);
-                if (!property) {
-                  throw new Error(`在${reflect.name}上找不到属性${reflect.typeProperties[index]}, 存在的属性：${inter.properties.map(it => it.name)}`);
-                }
-                return property;
-              });
-              if (!properties.some(it => it.type.includes('<'))) {
-                properties.forEach((property, index) => {
-                  if (property.type.endsWith('[]') || property.type.startsWith('Array<')) {
-                    property.type = typeChars[index] + '[]';
-                  } else {
-                    property.type = typeChars[index];
-                  }
-                });
-                addInterface(inter);
-              } else {
-                console.error(`数据类型【${inter.name}】参数【${properties.find(it => it.type.includes('<')).name}】含有泛型，无法解析为泛型关联属性`);
-              }
-            } else {
-              console.error(`数据类型【${inter.name}】包含泛型参数，但是缺少泛型映射配置`);
-            }
-          } else {
-            console.error(`数据类型【${inter.name}】包含泛型参数，但是缺少泛型映射配置`);
-          }
+          inter.resolveTypeParameters(config);
+          addInterface(inter);
         } else {
           addInterface(inter);
         }
@@ -140,6 +109,11 @@ export function generateApiDefinitions(data: SwaggerDoc,
         api.__responseType = resolveResponseType(
             typeDefinition.responses['200']
         );
+        if (api.__responseType && api.__responseType.toString() === 'PageVo') {
+          console.log(
+              typeDefinition.responses['200']
+          )
+        }
         if (typeDefinition.parameters && typeDefinition.parameters.length) {
           typeDefinition.parameters.forEach((p: SwaggerParameter) => {
             let enumType = '';
@@ -188,7 +162,9 @@ export function generateApiDefinitions(data: SwaggerDoc,
                     type: 'string'
                   }));
                 } else {
-                  console.error(`接口${api.__url}存在无法识别的参数${p.name}`);
+                  if (config.log.includes('error')) {
+                    console.error(`接口${api.__url}存在无法识别的参数${p.name}`);
+                  }
                 }
               }
             }
@@ -199,17 +175,21 @@ export function generateApiDefinitions(data: SwaggerDoc,
     });
   });
   const apiObject = {};
+  // todo __definitionPath 有问题
   apis.forEach(api => {
-    let tmp = apiObject;
-    if (api.__definitionPath.length){
+    let tmp: any = apiObject;
+    if (api.__definitionPath.length) {
       api.__definitionPath.forEach((dp, index) => {
         if (!tmp[dp]) {
-          tmp[dp] = {};
+          tmp[dp] = {
+            __definitionPath: api.__definitionPath.slice(0, index)
+          };
         }
         if (index === api.__definitionPath.length - 1) {
           Object.keys(tmp[dp]).forEach(key => {
-            api[key] = tmp[dp][key]
+            api[key] = tmp[dp][key];
           });
+          tmp.__definitionPath = api.__definitionPath.slice(0, api.__definitionPath.length - 1)
           tmp[dp] = api;
         } else {
           tmp = tmp[dp];

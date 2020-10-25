@@ -25,25 +25,33 @@ function hasSameItems(a: any[], b: any[]) {
 export default class Type {
   public description: string;
   public name: string;
-  public type: string;
+  public type: RefObject;
   public values: any[];
 
   constructor() {
     this.name = '';
     this.values = [];
     this.description = '';
-    this.type = '';
+    this.type = new RefObject('any');
   }
 
-  toString() {
+  public toString() {
     return `${this.description ? '/**\n * ' + this.description + '\n */\n'
         : ''}export type ${this.name} = ${this.values.map(v => {
-      if (this.type === 'number') {
+      if (this.type.name === 'number') {
         return `${v}`;
       } else {
         return `'${v}'`;
       }
     }).join('\n    | ')};`;
+  }
+
+  public setType(propertyType: string) {
+    this.type = resolveRefObject(propertyType);
+  }
+
+  public getType() {
+    return this.type;
   }
 }
 
@@ -56,11 +64,13 @@ export function resolveType(propertyType: string, propertyDefinition?): string {
     type = 'number';
   } else if (propertyType === 'array') {
     if (propertyDefinition) {
-      if (propertyDefinition.items.genericRef) {
-        type = propertyDefinition.items.genericRef.simpleRef + '[]';
+      if (propertyDefinition.items.$ref) {
+        type = `Array<${pure(propertyDefinition.items.$ref)}>`;
+      } else if (propertyDefinition.items.genericRef) {
+        type = `Array<${propertyDefinition.items.genericRef.simpleRef}>`;
       } else {
         if (propertyDefinition.items.type === 'array') {
-          return 'any[]';
+          return 'Array<any>';
         }
         type = resolveType(propertyDefinition.items.type, propertyDefinition) + '[]';
       }
@@ -72,16 +82,15 @@ export function resolveType(propertyType: string, propertyDefinition?): string {
       return '{[key: string]: any}';
     }
   } else {
-    if (propertyDefinition && propertyDefinition.genericRef) {
+    if (propertyDefinition && propertyDefinition.$ref) {
+      type = pure(propertyDefinition.$ref);
+    } else if (propertyDefinition && propertyDefinition.genericRef) {
       type = propertyDefinition.genericRef.simpleRef;
     } else {
       if (propertyType === 'object') {
         type = 'any';
       }
     }
-  }
-  if  (typeof type !== 'string') {
-    console.log(type)
   }
   return type;
 }
@@ -109,9 +118,9 @@ export function resolveResponseType(response: SwaggerResponse): RefObject {
 }
 
 
-export function pure(ref): string {
-  // if (!/^[a-zA-Z0-9<>\[\],]+$/i.test(res)) {
-  //   console.log(res);
-  // }
+export function pure(ref: string): string {
+  if (ref === undefined || ref === null) {
+    return ref;
+  }
   return ref.replace('#/definitions/', '').replace(/«/g, '<').replace(/»/g, '>');
 }

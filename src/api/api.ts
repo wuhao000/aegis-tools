@@ -91,12 +91,12 @@ export default class Api {
     if (param.name.includes('.')) {
       const nameParts = param.name.split('.');
       let parentParam: Parameter = this.__parameters.find(it => it.name === nameParts[0]) ||
-        new Parameter({
-          name: nameParts[0],
-          required: param.required,
-          type: 'any',
-          in: param.in
-        });
+          new Parameter({
+            name: nameParts[0],
+            required: param.required,
+            type: 'any',
+            in: param.in
+          });
       if (!this.__parameters.some(it => it.name === nameParts[0])) {
         this.__addParameter(parentParam);
       }
@@ -148,7 +148,7 @@ export default class Api {
   public __getParameterType(): string {
     if (this.__bodyParameter) {
       if (this.__parameters.length) {
-        console.error('混合参数无法解析');
+        console.error(`${this.__url}接口的混合参数无法解析`);
         return 'any';
       } else {
         return this.__bodyParameter.type;
@@ -233,24 +233,24 @@ ${space}}`;
   return str;
 }
 
-const apiNames = [];
-
-function createApiDefinitionInterfaceName(key: string, parentKey: string, obj: Api) {
+function createApiDefinitionInterfaceName(key: string, parentKey: string[], obj: Api) {
   let name = toPascal(key) + 'API<T>';
-  if (parentKey) {
-    name = toPascal(parentKey) + name;
+  if (parentKey.length) {
+    name = parentKey.map(it => toPascal(it)).join('') + name;
+  } else if (obj.__definitionPath && obj.__definitionPath.length) {
+    name = obj.__definitionPath.map(it => toPascal(it)).join('') + name;
   }
   name = normalizeName(name);
-  if (apiNames.includes(name)) {
-    name = generateName(name, obj.__definitionPath || [], apiNames);
-  }
-  apiNames.push(name);
   return name;
 }
 
-export function toDefinitionString(obj: Api, level: number = 0, parentKey: string = null) {
+/**
+ * 生成接口类型定义文件
+ */
+export function toDefinitionString(obj: Api, level: number = 0, parentKey: string[] = []) {
   let str = '';
   if (typeof obj === 'object') {
+    // 没有子接口的直接生成 GenericAPI<T> 形式的内容
     if (isApiObject(obj) && !hasSubApis(obj)) {
       str += obj.__getType();
     } else {
@@ -268,13 +268,13 @@ export function toDefinitionString(obj: Api, level: number = 0, parentKey: strin
                 return `${space}/**
 ${space} * ${value.__summary}
 ${space} */
-${space}${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
+${space}${normalizeName(key)}: ${toDefinitionString(value, level + 1, parentKey.concat(key))}`;
               } else {
                 if (level === 0) {
-                  let name = createApiDefinitionInterfaceName(key, parentKey, obj);
+                  let name = createApiDefinitionInterfaceName(key, obj[key].__definitionPath, obj);
                   return `  ${normalizeName(key)}: ${name}`;
                 } else {
-                  return `  ${normalizeName(key)}: ${toDefinitionString(value, level + 1, key)}`;
+                  return `  ${normalizeName(key)}: ${toDefinitionString(value, level + 1, parentKey.concat(key))}`;
                 }
               }
             } else {

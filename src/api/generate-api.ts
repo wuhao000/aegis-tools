@@ -45,6 +45,7 @@ export async function generateApi(config: ApiConfig) {
   const requests = [];
   const datas = [];
   for (const c of config.configs) {
+    c.log = config.log || ['error'];
     try {
       const request = axios.get(c.url);
       requests.push(request);
@@ -78,7 +79,9 @@ class ApiDef {
       Object.keys(obj).forEach(key => {
         const subObj = obj[key];
         subObj.name = key;
-        this.subApis.push(new ApiDef(subObj, [].concat(keyPath).concat([key])));
+        const kp = [].concat(...keyPath)
+        kp.push(key);
+        this.subApis.push(new ApiDef(subObj, kp));
       });
     }
   }
@@ -115,7 +118,9 @@ export function generateData(config: ApiConfig, datas: Array<{
     const c = item.config;
     const data = item.data;
     try {
-      beanInterfaces = beanInterfaces.concat(generateBeanDefinitions(data.definitions, c));
+      if (data.definitions) {
+        beanInterfaces = beanInterfaces.concat(generateBeanDefinitions(data.definitions, c));
+      }
       const apiData = generateApiDefinitions(data, beanInterfaces, c);
       apis = apis.concat(apiData.apis);
       apiObject = merge(apiObject, apiData.apiObject);
@@ -125,20 +130,25 @@ export function generateData(config: ApiConfig, datas: Array<{
   });
   const apiImportList: ImportDeclaration[] = [];
   apiImportList.push(new ImportDeclaration(
-    null, types.map(it => it.name).concat(beanInterfaces.map(it => it.name.name)), `./${beanDefFileName}`
+      null, types.map(it => it.name).concat(beanInterfaces.map(it => it.name.name)), `./${beanDefFileName}`
   ));
+  const body = toDefinitionString(apiObject);
+  const apiInterfaces = resolveAPIInterfaces(apiObject, 0, [], []);
   return {
     config,
     interfaces: beanInterfaces,
     apiObject,
     imports: apiImportList,
     apis,
-    generatedApisBody: toDefinitionString(apiObject),
-    apiInterfaces: resolveAPIInterfaces(apiObject, 0, null, [])
-      .map(it => ({name: it.name, extendsApi: it.extendsApi, body: toDefinitionString(it.value, it.level, it.key)}))
+    generatedApisBody: body,
+    apiInterfaces: apiInterfaces.map(it => ({
+      name: it.name,
+      extendsApi: it.extendsApi,
+      body: toDefinitionString(it.value, it.level, it.keyPath)
+    }))
   } as APIData;
 
-  function resolveAPIInterfaces(obj: Api, level: number = 0, parentKey: string = null, interfaces: Array<any> = []) {
+  function resolveAPIInterfaces(obj: Api, level: number = 0, parentKey: string[] = [], interfaces: Array<any> = []) {
     if (typeof obj === 'object') {
       if (hasSubApis(obj)) {
         const keys = Object.keys(obj).filter(it => !isApiProperty(it));
@@ -147,25 +157,26 @@ export function generateData(config: ApiConfig, datas: Array<{
             const value: Api = obj[key];
             if (typeof value === 'object') {
               if (isApiObject(value) && !hasSubApis(value)) {
-                resolveAPIInterfaces(value, level + 1, key, interfaces);
+                resolveAPIInterfaces(value, level + 1, parentKey.concat(key), interfaces);
               } else {
                 let name = toPascal(key) + 'API<T>';
-                if (parentKey) {
-                  name = toPascal(parentKey) + name;
+                if (parentKey.length) {
+                  name = parentKey.map(it => toPascal(it)).join('') + name;
                 }
-                resolveAPIInterfaces(value, level, key, interfaces);
+                resolveAPIInterfaces(value, level, parentKey.concat(key), interfaces);
                 name = normalizeName(name);
                 const existsInterface = interfaces.find(it => it.name === name);
-                if (existsInterface && existsInterface.keyPath) {
+                if (existsInterface && existsInterface.keyPath && obj.__definitionPath) {
                   if (existsInterface.keyPath.join('/') !== obj.__definitionPath.join('/')) {
                     name = generateName(
-                      name, obj.__definitionPath, interfaces.map(it => it.name)
+                        name, obj.__definitionPath, interfaces.map(it => it.name)
                     );
                   }
                 }
                 if (value instanceof Api) {
                   value.__subApiName = name;
                 }
+
                 interfaces.push({
                   name,
                   value,

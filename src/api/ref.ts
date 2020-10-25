@@ -105,6 +105,18 @@ export class RefObject {
       return this.name;
     }
   }
+
+  replaceTypeParameter(typeParameter: RefObject, newTypeParameter: RefObject) {
+    if (this.toString() === typeParameter.toString()) {
+      Object.keys(newTypeParameter).forEach(key => {
+        this[key] = newTypeParameter[key];
+      });
+    } else {
+      this.typeParameters.forEach(it => {
+        it.replaceTypeParameter(typeParameter, newTypeParameter);
+      });
+    }
+  }
 }
 
 // 将引用名称解析为对象

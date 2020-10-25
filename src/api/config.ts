@@ -1,3 +1,5 @@
+export type LogType = 'warn' | 'info' | 'error' | 'log';
+
 export function getConfig(): ApiConfig | undefined {
   const fs = require('fs');
   const path = require('path');
@@ -22,6 +24,7 @@ export interface ApiConfig {
   apiRoot: string;
   // 类型定义
   configs: Config[];
+  log: Array<LogType>;
   templates: { [key: string]: string };
   typeRoot: string;
   typesAsAny?: string[]
@@ -30,6 +33,7 @@ export interface ApiConfig {
 
 
 export interface Config {
+  log: Array<LogType>;
   excludes: RegExp[];
   includes: RegExp[];
   typeParameterReflects: Array<{

@@ -1,6 +1,6 @@
 {
   "name": "aegis-dev-tools",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "前端项目辅助工具",
   "author": "wuhao",
   "main": "index.js",
