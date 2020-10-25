@@ -68,6 +68,8 @@ export function resolveType(propertyType: string, propertyDefinition?): string {
         type = `Array<${pure(propertyDefinition.items.$ref)}>`;
       } else if (propertyDefinition.items.genericRef) {
         type = `Array<${propertyDefinition.items.genericRef.simpleRef}>`;
+      } else if (propertyDefinition.items.type) {
+        type = `Array<${resolveType(propertyDefinition.items.type)}>`;
       } else {
         if (propertyDefinition.items.type === 'array') {
           return 'Array<any>';

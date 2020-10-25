@@ -98,7 +98,7 @@ export class RefObject {
     } else if (refConfig.numberTypes.includes(this.name)) {
       return 'number';
     } else if (this.name === 'Unit') {
-      return 'undefined';
+      return 'any';
     } else if (['String', 'Boolean'].includes(this.name)) {
       return this.name.toLowerCase();
     } else {

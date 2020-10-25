@@ -156,7 +156,7 @@ export default class Api {
     } else if (this.__parameters.length) {
       return createParametersType(this.__parameters);
     }
-    return 'undefined';
+    return 'any';
   }
 
   public toString() {
