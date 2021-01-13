@@ -2,9 +2,9 @@ import {writeFile} from '../file';
 import {generateAPI, generateData, normalizeName} from '../generate-api';
 import {config, data} from './utils';
 
-const res = generateData(config, [{
-  config: config.configs[0], data
-}]);
+const res = generateData(
+  config.configs[0], data
+);
 describe('接口定义', () => {
   it('写入文件', () => {
     writeFile(res);

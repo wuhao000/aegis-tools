@@ -23,16 +23,22 @@ export const config = getConfig();
 export interface ApiConfig {
   apiRoot: string;
   // 类型定义
-  configs: Config[];
+  configs: ModuleConfig[];
   log: Array<LogType>;
   templates: { [key: string]: string };
   typeRoot: string;
+  /**
+   * 映射为any的类型
+   */
   typesAsAny?: string[]
   unwrapTypes?: string[];
 }
 
-
-export interface Config {
+export interface ModuleConfig {
+  templates: { [key: string]: string };
+  apiRoot: string;
+  typeRoot: string;
+  name: string;
   log: Array<LogType>;
   excludes: RegExp[];
   includes: RegExp[];

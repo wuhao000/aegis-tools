@@ -255,7 +255,7 @@ export function toDefinitionString(obj: Api, level: number = 0, parentKey: strin
       str += obj.__getType();
     } else {
       if (isApiObject(obj) && level !== 0) {
-        str += obj.__subApiName;
+        str += createApiDefinitionInterfaceName(obj.__name, obj.__definitionPath, obj);
       } else {
         const space = ' '.repeat(2 * level + 2);
         str += '{';

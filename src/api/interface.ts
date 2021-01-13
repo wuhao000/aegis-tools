@@ -1,4 +1,4 @@
-import {Config} from './config';
+import {ModuleConfig} from './config';
 import {normalizeName} from './generate-api';
 import {RefObject, resolveRefObject} from './ref';
 
@@ -58,7 +58,7 @@ export default class Interface {
     }
   }
 
-  public getReflectProperty(config: Config, index: number) {
+  public getReflectProperty(config: ModuleConfig, index: number) {
     if (config.typeParameterReflects) {
       const reflect = config.typeParameterReflects.find(it => it.name === this.name.name);
       if (reflect) {
@@ -69,7 +69,7 @@ export default class Interface {
   }
 
 
-  resolveTypeParameters(config: Config) {
+  resolveTypeParameters(config: ModuleConfig) {
     this.name.typeParameters = this.name.typeParameters.map((typeParameter, index) => {
       const typeChars = ['T', 'S', 'U', 'V', 'P', 'M'];
       const newTypeParameter = new RefObject(typeChars[index]);

@@ -1,12 +1,12 @@
 import toPascal from '../pascal';
 import {ApiDefinition, ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
 import Api, {METHODS_SUPPORT_FORM_DATA, Parameter} from './api';
-import {Config} from './config';
+import {ModuleConfig} from './config';
 import {ApiDefinitionsResult, normalizeName} from './generate-api';
 import Interface, {InterfaceProperty} from './interface';
 import Type, {addType, findTypeByEnum, pure, resolveResponseType, resolveType} from './type';
 
-export function generateBeanDefinitions(definitions: ApiDefinitions, config: Config): Interface[] {
+export function generateBeanDefinitions(definitions: ApiDefinitions, config: ModuleConfig): Interface[] {
   const keys = Object.keys(definitions);
   const beanInterfaces: Interface[] = [];
 
@@ -67,7 +67,7 @@ export function generateBeanDefinitions(definitions: ApiDefinitions, config: Con
 
 
 export function generateApiDefinitions(data: SwaggerDoc,
-                                       beanInterfaces: Interface[], config: Config): ApiDefinitionsResult {
+                                       beanInterfaces: Interface[], config: ModuleConfig): ApiDefinitionsResult {
   const apis: Api[] = [];
   const paths = Object.keys(data.paths);
   paths.forEach(path => {

@@ -1,13 +1,12 @@
 import toPascal from '../pascal';
 import {SwaggerDoc} from '../types/swagger';
 import Api, {hasSubApis, isApiProperty, toDefinitionString} from './api';
-import {ApiConfig, Config, getConfig} from './config';
+import {ApiConfig, getConfig, ModuleConfig} from './config';
 import {generateApiDefinitions, generateBeanDefinitions} from './definition';
 import {beanDefFileName, writeFile} from './file';
 import ImportDeclaration from './import-declaration';
 import Interface from './interface';
 import {types} from './type';
-
 
 export function generateAPI() {
   const config = getConfig();
@@ -43,23 +42,26 @@ export function normalizeName(name: string) {
 export async function generateApi(config: ApiConfig) {
   const axios = require('axios');
   const requests = [];
-  const datas = [];
   for (const c of config.configs) {
-    c.log = config.log || ['error'];
+    const moduleConfig = Object.assign({
+      apiRoot: config.apiRoot,
+      templates: config.templates,
+      typeRoot: config.typeRoot,
+      typesAsAny: config.typesAsAny,
+      log: config.log || ['error']
+    }, c);
     try {
-      const request = axios.get(c.url);
+      const request = axios.get(moduleConfig.url);
       requests.push(request);
       const data = (await request).data;
-      datas.push({
-        config: c,
-        data
-      });
+      const res = generateData(moduleConfig, data);
+      writeFile(res);
+      console.log(`${moduleConfig.name}生成API完成`);
     } catch (e) {
       console.error(e);
     }
   }
-  const res = generateData(config, datas);
-  writeFile(res);
+
   return requests;
 }
 
@@ -79,7 +81,7 @@ class ApiDef {
       Object.keys(obj).forEach(key => {
         const subObj = obj[key];
         subObj.name = key;
-        const kp = [].concat(...keyPath)
+        const kp = [].concat(...keyPath);
         kp.push(key);
         this.subApis.push(new ApiDef(subObj, kp));
       });
@@ -93,14 +95,9 @@ export function isApiObject(obj: Api) {
 
 /**
  * 生成类型定义
- * @param {ApiConfig[]} config
- * @param datas
  * @returns {Promise<void>}
  */
-export function generateData(config: ApiConfig, datas: Array<{
-  config: Config,
-  data: SwaggerDoc
-}>): APIData {
+export function generateData(config: ModuleConfig, data: SwaggerDoc): APIData {
   const merge = require('lodash.merge');
   config = merge({
     typeRoot: 'src/types',
@@ -114,23 +111,19 @@ export function generateData(config: ApiConfig, datas: Array<{
   let apiObject: Api = {
     __definitionPath: []
   };
-  datas.forEach(item => {
-    const c = item.config;
-    const data = item.data;
-    try {
-      if (data.definitions) {
-        beanInterfaces = beanInterfaces.concat(generateBeanDefinitions(data.definitions, c));
-      }
-      const apiData = generateApiDefinitions(data, beanInterfaces, c);
-      apis = apis.concat(apiData.apis);
-      apiObject = merge(apiObject, apiData.apiObject);
-    } catch (e) {
-      console.error(e);
+  try {
+    if (data.definitions) {
+      beanInterfaces = beanInterfaces.concat(generateBeanDefinitions(data.definitions, config));
     }
-  });
+    const apiData = generateApiDefinitions(data, beanInterfaces, config);
+    apis = apis.concat(apiData.apis);
+    apiObject = merge(apiObject, apiData.apiObject);
+  } catch (e) {
+    console.error(e);
+  }
   const apiImportList: ImportDeclaration[] = [];
   apiImportList.push(new ImportDeclaration(
-      null, types.map(it => it.name).concat(beanInterfaces.map(it => it.name.name)), `./${beanDefFileName}`
+    null, types.map(it => it.name).concat(beanInterfaces.map(it => it.name.name)), `./${beanDefFileName}${config.name ? `-${config.name}` : ''}`
   ));
   const body = toDefinitionString(apiObject);
   const apiInterfaces = resolveAPIInterfaces(apiObject, 0, [], []);
@@ -169,7 +162,7 @@ export function generateData(config: ApiConfig, datas: Array<{
                 if (existsInterface && existsInterface.keyPath && obj.__definitionPath) {
                   if (existsInterface.keyPath.join('/') !== obj.__definitionPath.join('/')) {
                     name = generateName(
-                        name, obj.__definitionPath, interfaces.map(it => it.name)
+                      name, obj.__definitionPath, interfaces.map(it => it.name)
                     );
                   }
                 }
@@ -223,7 +216,7 @@ export interface APIData {
   apiInterfaces: APIInterface[];
   apiObject: object;
   apis: Api[];
-  config: ApiConfig;
+  config: ModuleConfig;
   generatedApisBody: string;
   imports: ImportDeclaration[];
   interfaces: Interface[];
