@@ -1,5 +1,5 @@
-import {RefObject, resolveRef, resolveRefObject} from './ref';
 import {SwaggerResponse} from '@/types/swagger';
+import {RefObject, resolveRef, resolveRefObject} from './ref';
 
 export const types: Type[] = [];
 
@@ -9,7 +9,7 @@ export function findTypeByEnum(values: any[]): Type | undefined {
 
 export function addType(type: Type) {
   if (!types.some(t => t.name === type.name)
-      && !types.some(t => hasSameItems(t.values, type.values))) {
+    && !types.some(t => hasSameItems(t.values, type.values))) {
     types.push(type);
   }
 }
@@ -36,9 +36,13 @@ export default class Type {
   }
 
   public toString() {
+    if (this.name === 'BasicDataEncodeType') {
+      console.log(this.values);
+      console.log(this.type);
+    }
     return `${this.description ? '/**\n * ' + this.description + '\n */\n'
-        : ''}export type ${this.name} = ${this.values.map(v => {
-      if (this.type.name === 'number') {
+      : ''}export type ${this.name} = ${this.values.map(v => {
+      if (['number', 'integer'].includes(this.type.name)) {
         return `${v}`;
       } else {
         return `'${v}'`;
@@ -54,7 +58,6 @@ export default class Type {
     return this.type;
   }
 }
-
 
 export function resolveType(propertyType: string, propertyDefinition?): string {
   let type = 'any';
@@ -118,7 +121,6 @@ export function resolveResponseType(response: SwaggerResponse): RefObject {
   }
   return undefined;
 }
-
 
 export function pure(ref: string): string {
   if (ref === undefined || ref === null) {
