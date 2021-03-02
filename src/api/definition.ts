@@ -162,7 +162,7 @@ export function generateApiDefinitions(data: SwaggerDoc,
                     type: 'string'
                   }));
                 } else {
-                  if (config.log.includes('error')) {
+                  if (config.log && config.log.includes('error')) {
                     console.error(`接口${api.__url}存在无法识别的参数${p.name}`);
                   }
                 }

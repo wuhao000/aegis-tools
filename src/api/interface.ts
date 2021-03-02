@@ -80,7 +80,7 @@ export default class Interface {
         this.properties.forEach(property => {
           property.replaceTypeParameter(typeParameter, newTypeParameter);
         });
-        if (config.log.includes('warn')) {
+        if (config.log && config.log.includes('warn')) {
           console.warn(`数据类型【${this.name}】包含泛型参数，但是缺少泛型映射配置，可能导致泛型映射不准确`);
         }
       }

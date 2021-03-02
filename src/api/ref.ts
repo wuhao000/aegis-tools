@@ -102,6 +102,9 @@ export class RefObject {
     } else if (['String', 'Boolean'].includes(this.name)) {
       return this.name.toLowerCase();
     } else {
+      if (this.name === 'Array') {
+        return `${this.name}<any>`;
+      }
       return this.name;
     }
   }

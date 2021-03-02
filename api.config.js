@@ -10,7 +10,7 @@ module.exports = {
     definition: 'definition.ts.tmpl'
   },
   configs: [{
-    url: 'http://localhost:8019/v2/api-docs?group=aegis',
+    url: 'http://localhost:9210/management/apis',
     excludes: [/\/api\/v1\/msg.*/],
     typeParameterReflects: [{
       name: 'KeyValue',
