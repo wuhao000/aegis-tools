@@ -48,6 +48,7 @@ export async function generateApi(config: ApiConfig) {
       templates: config.templates,
       typeRoot: config.typeRoot,
       typesAsAny: config.typesAsAny,
+      typesAsVoid: config.typesAsVoid,
       log: config.log || ['error']
     }, c);
     try {
@@ -56,7 +57,7 @@ export async function generateApi(config: ApiConfig) {
       const data = (await request).data;
       const res = generateData(moduleConfig, data);
       writeFile(res);
-      console.log(`${moduleConfig.name}生成API完成`);
+      console.log(`${moduleConfig.name || ''}生成API完成`);
     } catch (e) {
       console.error(e);
     }

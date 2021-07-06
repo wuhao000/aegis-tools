@@ -10,7 +10,8 @@ module.exports = {
     definition: 'definition.ts.tmpl'
   },
   configs: [{
-    url: 'http://localhost:8019/v2/api-docs?group=aegis',
+    name: 'oa',
+    url: 'https://oa.aegis-data.cn/api/management/apis',
     excludes: [/\/api\/v1\/msg.*/],
     typeParameterReflects: [{
       name: 'KeyValue',
@@ -33,5 +34,6 @@ module.exports = {
     }]
   }],
   typesAsAny: ['JSONArray', 'Serializable', 'JSONObject', 'Unit'],
+  typesAsVoid: ['Unit'],
   unwrapTypes: ['Response', 'ResponseSimpleEnum', 'JsonResult']
 };

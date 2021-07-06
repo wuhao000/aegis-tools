@@ -1,5 +1,5 @@
 
-export interface BodyParameter {
+export interface BodyParameterType {
   name: string;
   required: boolean;
   type: string;

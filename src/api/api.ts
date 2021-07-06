@@ -1,6 +1,6 @@
 import toPascal from '../pascal';
-import {BodyParameter} from '../types/api-generate';
-import {generateName, isApiObject, normalizeName} from './generate-api';
+import {BodyParameterType} from '../types/api-generate';
+import {isApiObject, normalizeName} from './generate-api';
 import {RefObject} from './ref';
 
 export const METHODS_SUPPORT_FORM_DATA = ['POST', 'PUT', 'DELETE'];
@@ -57,10 +57,14 @@ ${this.children.map(it => it.toString()).join(',\n')}
   }
 }
 
+export class BodyParameter extends Parameter {
+
+}
+
 export const DEFINITION_PATH_KEY = '__definitionPath';
 
 export default class Api {
-  public __bodyParameter?: BodyParameter = null;
+  public __bodyParameter?: BodyParameterType = null;
   public __definitionPath: any[];
   public __id?: string;
   public __isFormData?: boolean;
@@ -142,7 +146,7 @@ export default class Api {
     if (this.__responseType) {
       return this.__responseType.toString();
     }
-    return 'any';
+    return 'void';
   }
 
   public __getParameterType(): string {

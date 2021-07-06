@@ -104,7 +104,14 @@ interface ApiProperties {
 interface ApiPropertyContent {
   type: string;
   vendorExtensions: {};
-  items: { vendorExtensions: {}; genericRef: { format: string; type: string; ref: string; simpleRef: string }; $ref: string };
+  items: ItemsType;
+}
+
+interface ItemsType {
+  vendorExtensions?: {};
+  genericRef?: { format: string; type: string; ref: string; simpleRef: string };
+  $ref?: string;
+  type?: string;
 }
 
 interface SwaggerAPI {
@@ -122,27 +129,29 @@ interface SwaggerAPI {
 }
 
 interface ResponseSchema {
-  vendorExtensions: {};
-  genericRef: GenericRef;
-  $ref: string;
-  items: any;
+  vendorExtensions?: {};
+  genericRef?: GenericRef;
+  $ref?: string;
+  items?: any;
   type?: string;
 }
 
 declare type ParameterPositionType = 'query' | 'path' | 'body';
 
 interface SwaggerParameter {
-  enum: string[];
-  vendorExtensions: any;
+  enum?: string[];
+  items?: ItemsType;
+  vendorExtensions?: any;
   in: ParameterPositionType;
   name: string;
-  description: string;
+  description?: string;
+  collectionFormat?: string;
   required: boolean;
   schema?: ResponseSchema;
   type: string;
-  default: number;
-  allowEmptyValue: boolean;
-  format: string;
+  default?: number;
+  allowEmptyValue?: boolean;
+  format?: string;
 }
 
 interface GenericRef {
@@ -153,11 +162,14 @@ interface GenericRef {
 }
 
 interface SwaggerResponse {
-  description: string;
-  schema: ResponseSchema;
-  examples: {};
-  headers: {};
-  vendorExtensions: {};
+  description?: string;
+  schemaAsModel?: ResponseSchema;
+  schemaAsProperty?: ResponseSchema;
+  schema?: ResponseSchema;
+  responseSchema?: ResponseSchema;
+  examples?: {};
+  headers?: {};
+  vendorExtensions?: {};
 }
 
 interface SwaggerResponses {
