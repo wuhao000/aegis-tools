@@ -33,5 +33,6 @@ module.exports = {
     }]
   }],
   typesAsAny: ['JSONArray', 'Serializable', 'JSONObject', 'Unit'],
+  typesAsVoid: ['Unit'],
   unwrapTypes: ['Response', 'ResponseSimpleEnum', 'JsonResult']
 };

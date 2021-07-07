@@ -2,6 +2,7 @@ import {resolveRefObject} from '../ref';
 
 describe('ref', () => {
   it('resolve', () => {
+    expect(resolveRefObject('JsonResult<Unit>').toString()).toBe('JsonResult<void>');
     expect(resolveRefObject('JsonResult<JSONArray>').toString()).toBe('JsonResult<any>');
     expect(resolveRefObject('JsonResult<Page<User>>').toString()).toBe('JsonResult<Page<User>>');
     expect(resolveRefObject('List<Map<String, User>>').toString()).toBe('Array<{[key: string]: User}>');

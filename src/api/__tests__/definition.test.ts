@@ -1,4 +1,7 @@
-import {generateBeanDefinitions} from '../definition';
+import {SwaggerParameter, SwaggerResponse} from '../../types/swagger';
+import Api from '../api';
+import {generateBeanDefinitions, resolveParameter} from '../definition';
+import {resolveResponseType, resolveType} from '../type';
 import {config} from './utils';
 
 describe('类型定义', () => {
@@ -129,6 +132,118 @@ describe('类型定义', () => {
     } as any;
     const beans = generateBeanDefinitions(definitions, config.configs[0]);
     expect(beans.length).toBe(1);
+  });
+  it('响应结果解析', () => {
+    const res: SwaggerResponse = {
+      description: 'OK',
+      schemaAsModel: {
+        vendorExtensions: {},
+        type: 'array',
+        items: {
+          vendorExtensions: {},
+          genericRef: {
+            format: 'INTERNAL',
+            type: 'DEFINITION',
+            ref: '#/definitions/Do1CustomObjectBaseVO',
+            simpleRef: 'Do1CustomObjectBaseVO'
+          },
+          $ref: '#/definitions/Do1CustomObjectBaseVO'
+        }
+      },
+      schemaAsProperty: {
+        type: 'array',
+        vendorExtensions: {},
+        items: {
+          vendorExtensions: {},
+          genericRef: {
+            format: 'INTERNAL',
+            type: 'DEFINITION',
+            ref: '#/definitions/Do1CustomObjectBaseVO',
+            simpleRef: 'Do1CustomObjectBaseVO'
+          },
+          $ref: '#/definitions/Do1CustomObjectBaseVO'
+        }
+      },
+      examples: {},
+      headers: {},
+      vendorExtensions: {},
+      schema: {
+        type: 'array',
+        vendorExtensions: {},
+        items: {
+          vendorExtensions: {},
+          genericRef: -{
+            format: 'INTERNAL',
+            type: 'DEFINITION',
+            ref: '#/definitions/Do1CustomObjectBaseVO',
+            simpleRef: 'Do1CustomObjectBaseVO'
+          },
+          $ref: '#/definitions/Do1CustomObjectBaseVO'
+        }
+      },
+      responseSchema: {
+        vendorExtensions: {},
+        type: 'array',
+        items: {
+          vendorExtensions: {},
+          genericRef: -{
+            format: 'INTERNAL',
+            type: 'DEFINITION',
+            ref: '#/definitions/Do1CustomObjectBaseVO',
+            simpleRef: 'Do1CustomObjectBaseVO'
+          },
+          $ref: '#/definitions/Do1CustomObjectBaseVO'
+        }
+      }
+    };
+    const voidRef: SwaggerResponse = {
+      description: 'OK',
+      examples: {},
+      headers: {},
+      vendorExtensions: {}
+    };
+    const ref = resolveResponseType(voidRef);
+    expect(ref).toBe(undefined);
+  });
+  it('参数解析', () => {
+    const param: SwaggerParameter = {
+      name: 'ids',
+      in: 'query',
+      description: '填单人用户账号',
+      required: false,
+      type: 'array',
+      items: {
+        type: 'string',
+        vendorExtensions: {}
+      },
+      collectionFormat: 'multi',
+      vendorExtensions: {}
+    };
+    const p = resolveParameter(param, new Api(), {log: ['error']});
+    expect(p.type).toBe('Array<string>');
+    const param2: SwaggerParameter = {
+      name: 'details',
+      in: 'query',
+      required: false,
+      type: 'object',
+      vendorExtensions: {}
+    };
+    const p2 = resolveParameter(param2, new Api(), {log: ['error']});
+    console.log(p2);
+    console.log(resolveType('array', {
+      type: 'array',
+      vendorExtensions: {},
+      items: {
+        vendorExtensions: {},
+        genericRef: {
+          format: 'INTERNAL',
+          type: 'DEFINITION',
+          ref: '#/definitions/Error-ModelName{namespace=\'java.time\', name=\'LocalDate\'}',
+          simpleRef: 'Error-ModelName{namespace=\'java.time\', name=\'LocalDate\'}'
+        },
+        $ref: '#/definitions/Error-ModelName{namespace=\'java.time\', name=\'LocalDate\'}'
+      }
+    }));
   });
   it('substr', () => {
     const name = 'JsonResult<HashMap<string,long>>';

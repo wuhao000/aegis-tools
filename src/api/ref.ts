@@ -69,6 +69,10 @@ export class RefObject {
     return config.typesAsAny && config.typesAsAny.includes(this.name) || this.name === 'object';
   }
 
+  get isVoidType() {
+    return config.typesAsVoid && config.typesAsVoid.includes(this.name);
+  }
+
   public toString() {
     if (this.isArrayType) {
       if (this.typeParameters.length >= 1) {
@@ -89,21 +93,21 @@ export class RefObject {
         }
         return `{[key: ${this.typeParameters[0].toString()}]: ${this.typeParameters[1].toString()}}`;
       } else {
-        return `{[key: string]: any}`;
+        return `{[key: string]: unknown}`;
       }
     } else if (this.typeParameters.length) {
       return `${this.name}<${this.typeParameters.map(it => it.toString()).join(', ')}>`;
+    } else if (this.isVoidType) {
+      return 'void';
     } else if (this.isAnyType) {
       return 'any';
     } else if (refConfig.numberTypes.includes(this.name)) {
       return 'number';
-    } else if (this.name === 'Unit') {
-      return 'any';
     } else if (['String', 'Boolean'].includes(this.name)) {
       return this.name.toLowerCase();
     } else {
       if (this.name === 'Array') {
-        return `${this.name}<any>`;
+        return 'Array<any>';
       }
       return this.name;
     }

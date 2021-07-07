@@ -1,5 +1,7 @@
-import {SwaggerResponse} from '@/types/swagger';
+import toPascal from '../pascal';
+import {normalizeName} from './generate-api';
 import {RefObject, resolveRef, resolveRefObject} from './ref';
+import {ItemsType, SwaggerResponse} from '@/types/swagger';
 
 export const types: Type[] = [];
 
@@ -9,7 +11,7 @@ export function findTypeByEnum(values: any[]): Type | undefined {
 
 export function addType(type: Type) {
   if (!types.some(t => t.name === type.name)
-    && !types.some(t => hasSameItems(t.values, type.values))) {
+      && !types.some(t => hasSameItems(t.values, type.values))) {
     types.push(type);
   }
 }
@@ -36,10 +38,6 @@ export default class Type {
   }
 
   public toString() {
-    if (this.name === 'BasicDataEncodeType') {
-      console.log(this.values);
-      console.log(this.type);
-    }
     return `${this.description ? '/**\n * ' + this.description + '\n */\n'
       : ''}export type ${this.name} = ${this.values.map(v => {
       if (['number', 'integer'].includes(this.type.name)) {
@@ -79,6 +77,8 @@ export function resolveType(propertyType: string, propertyDefinition?): string {
         }
         type = resolveType(propertyDefinition.items.type, propertyDefinition) + '[]';
       }
+    } else {
+      type = 'Array<any>';
     }
   } else if (propertyType === 'map') {
     if (propertyDefinition.genericType) {
@@ -91,10 +91,6 @@ export function resolveType(propertyType: string, propertyDefinition?): string {
       type = pure(propertyDefinition.$ref);
     } else if (propertyDefinition && propertyDefinition.genericRef) {
       type = propertyDefinition.genericRef.simpleRef;
-    } else {
-      if (propertyType === 'object') {
-        type = 'any';
-      }
     }
   }
   return type;
@@ -108,13 +104,17 @@ export function resolveResponseType(response: SwaggerResponse): RefObject {
       return resolveRef(ref);
     } else if (response.schema.items) {
       if (response.schema.items.genericRef && response.schema.items.genericRef.simpleRef) {
-        const refObj = resolveRefObject(response.schema.items.genericRef.simpleRef);
-        refObj.isEnum = true;
-        return refObj;
+        const enumRef = resolveRefObject(response.schema.items.genericRef.simpleRef);
+        const ref = new RefObject(null);
+        ref.isEnum = true;
+        ref.typeParameters.push(enumRef)
+        return ref;
       } else if (response.schema.items.$ref) {
-        const refObj = resolveRefObject(response.schema.items.$ref);
-        refObj.isEnum = true;
-        return refObj;
+        const enumRef = resolveRefObject(response.schema.items.$ref);
+        const ref = new RefObject(null);
+        ref.isEnum = true;
+        ref.typeParameters.push(enumRef)
+        return ref;
       }
       console.error('无法识别response类型：' + JSON.stringify(response));
     }

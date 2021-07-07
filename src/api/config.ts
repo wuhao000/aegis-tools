@@ -31,20 +31,21 @@ export interface ApiConfig {
    * 映射为any的类型
    */
   typesAsAny?: string[]
+  typesAsVoid?: string[]
   unwrapTypes?: string[];
 }
 
 export interface ModuleConfig {
-  templates: { [key: string]: string };
-  apiRoot: string;
-  typeRoot: string;
-  name: string;
-  log: Array<LogType>;
-  excludes: RegExp[];
-  includes: RegExp[];
-  typeParameterReflects: Array<{
+  templates?: { [key: string]: string };
+  apiRoot?: string;
+  typeRoot?: string;
+  name?: string;
+  log?: Array<LogType>;
+  excludes?: RegExp[];
+  includes?: RegExp[];
+  typeParameterReflects?: Array<{
     name: string;
     typeProperties: string[];
   }>;
-  url: string;
+  url?: string;
 }

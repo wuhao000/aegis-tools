@@ -1,6 +1,6 @@
 import toPascal from '../pascal';
 import {ApiDefinition, ApiDefinitions, SwaggerAPI, SwaggerDoc, SwaggerParameter} from '../types/swagger';
-import Api, {METHODS_SUPPORT_FORM_DATA, Parameter} from './api';
+import Api, {BodyParameter, METHODS_SUPPORT_FORM_DATA, Parameter} from './api';
 import {ModuleConfig} from './config';
 import {ApiDefinitionsResult, normalizeName} from './generate-api';
 import Interface, {InterfaceProperty} from './interface';
@@ -32,16 +32,16 @@ export function generateBeanDefinitions(definitions: ApiDefinitions, config: Mod
         if (!prop.includes('-')) {
           let enumType = '';
           if (propertyDefinition.enum) {
-            let type = findTypeByEnum(propertyDefinition.enum);
-            if (!type) {
-              type = new Type();
-              type.name = inter.name + toPascal(prop);
-              type.setType(propertyType);
-              type.values = propertyDefinition.enum;
-              type.description = propertyDefinition.description;
-              addType(type);
+            let enumItemType = findTypeByEnum(propertyDefinition.enum);
+            if (!enumItemType) {
+              enumItemType = new Type();
+              enumItemType.name = inter.name + toPascal(prop);
+              enumItemType.setType(propertyType);
+              enumItemType.values = propertyDefinition.enum;
+              enumItemType.description = propertyDefinition.description;
+              addType(enumItemType);
             }
-            enumType = type.name;
+            enumType = enumItemType.name;
           }
           inter.properties.push(new InterfaceProperty(
               prop,
@@ -65,6 +65,60 @@ export function generateBeanDefinitions(definitions: ApiDefinitions, config: Mod
   return beanInterfaces;
 }
 
+export function resolveParameter(p: SwaggerParameter, api: Api, config: ModuleConfig): Parameter {
+  let enumType = '';
+  if (p.enum) {
+    let type = findTypeByEnum(p.enum);
+    if (!type) {
+      type = new Type();
+      type.name = toPascal(api.__name) + normalizeName(toPascal(p.name));
+      type.values = p.enum;
+      type.description = p.description;
+      addType(type);
+    }
+    enumType = type.name;
+  }
+  if (p.in !== 'body') {
+    return new Parameter({
+      name: p.name,
+      in: p.in,
+      description: p.description,
+      default: p.default,
+      format: p.format,
+      required: p.required,
+      type: enumType ? enumType : resolveType(p.type, p)
+    });
+  } else {
+    if (p.schema.$ref || p.schema.genericRef) {
+      return new BodyParameter({
+        name: p.name,
+        required: true,
+        type: toPascal(pure(p.schema.$ref || p.schema.genericRef.simpleRef))
+      });
+    } else if (p.schema.items) {
+      return new BodyParameter({
+        name: p.name,
+        required: true,
+        type: 'Array<' + (p.schema.items.genericRef !== undefined ? pure(p.schema.items.genericRef.simpleRef) : 'any') + '>'
+      });
+    } else {
+      if (p.schema.type === 'string') {
+        return new Parameter({
+          name: p.name,
+          description: p.description,
+          default: p.default,
+          format: p.format,
+          required: p.required,
+          type: 'string'
+        });
+      } else {
+        if (config.log && config.log.includes('error')) {
+          console.error(`接口${api.__url}存在无法识别的参数${p.name}`);
+        }
+      }
+    }
+  }
+}
 
 export function generateApiDefinitions(data: SwaggerDoc,
                                        beanInterfaces: Interface[], config: ModuleConfig): ApiDefinitionsResult {
@@ -116,57 +170,11 @@ export function generateApiDefinitions(data: SwaggerDoc,
         }
         if (typeDefinition.parameters && typeDefinition.parameters.length) {
           typeDefinition.parameters.forEach((p: SwaggerParameter) => {
-            let enumType = '';
-            if (p.enum) {
-              let type = findTypeByEnum(p.enum);
-              if (!type) {
-                type = new Type();
-                type.name = toPascal(api.__name) + normalizeName(toPascal(p.name));
-                type.values = p.enum;
-                type.description = p.description;
-                addType(type);
-              }
-              enumType = type.name;
-            }
-            if (p.in !== 'body') {
-              api.__addParameter(new Parameter({
-                name: p.name,
-                in: p.in,
-                description: p.description,
-                default: p.default,
-                format: p.format,
-                required: p.required,
-                type: enumType ? enumType : resolveType(p.type)
-              }));
-            } else {
-              if (p.schema.$ref || p.schema.genericRef) {
-                api.__setBodyParameter(new Parameter({
-                  name: p.name,
-                  required: true,
-                  type: toPascal(pure(p.schema.$ref || p.schema.genericRef.simpleRef))
-                }));
-              } else if (p.schema.items) {
-                api.__setBodyParameter(new Parameter({
-                  name: p.name,
-                  required: true,
-                  type: 'Array<' + (p.schema.items.genericRef !== undefined ? pure(p.schema.items.genericRef.simpleRef) : 'any') + '>'
-                }));
-              } else {
-                if (p.schema.type === 'string') {
-                  api.__addParameter(new Parameter({
-                    name: p.name,
-                    description: p.description,
-                    default: p.default,
-                    format: p.format,
-                    required: p.required,
-                    type: 'string'
-                  }));
-                } else {
-                  if (config.log && config.log.includes('error')) {
-                    console.error(`接口${api.__url}存在无法识别的参数${p.name}`);
-                  }
-                }
-              }
+            const parameter = resolveParameter(p, api, config);
+            if (parameter instanceof BodyParameter) {
+              api.__setBodyParameter(parameter);
+            } else if (parameter) {
+              api.__addParameter(parameter)
             }
           });
         }
