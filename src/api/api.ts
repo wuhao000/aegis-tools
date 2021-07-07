@@ -160,7 +160,7 @@ export default class Api {
     } else if (this.__parameters.length) {
       return createParametersType(this.__parameters);
     }
-    return 'any';
+    return 'void';
   }
 
   public toString() {
