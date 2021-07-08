@@ -1,7 +1,7 @@
 import toPascal from '../pascal';
 import {normalizeName} from './generate-api';
 import {RefObject, resolveRef, resolveRefObject} from './ref';
-import {ItemsType, SwaggerResponse} from '@/types/swagger';
+import {ItemsType, SwaggerParameter, SwaggerResponse} from '@/types/swagger';
 
 export const types: Type[] = [];
 
@@ -57,7 +57,8 @@ export default class Type {
   }
 }
 
-export function resolveType(propertyType: string, propertyDefinition?): string {
+export function resolveType(propertyType: string,
+                            propertyDefinition?: SwaggerParameter | any): string {
   let type = 'any';
   if (['string', 'boolean', 'number'].includes(propertyType)) {
     type = propertyType;

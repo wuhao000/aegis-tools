@@ -99,7 +99,7 @@ export function resolveParameter(p: SwaggerParameter, api: Api, config: ModuleCo
       return new BodyParameter({
         name: p.name,
         required: true,
-        type: 'Array<' + (p.schema.items.genericRef !== undefined ? pure(p.schema.items.genericRef.simpleRef) : 'any') + '>'
+        type: resolveType("array", p.schema)
       });
     } else {
       if (p.schema.type === 'string') {

@@ -129,7 +129,7 @@ interface SwaggerAPI {
 }
 
 interface ResponseSchema {
-  vendorExtensions?: {};
+  vendorExtensions?: any;
   genericRef?: GenericRef;
   $ref?: string;
   items?: any;
@@ -146,9 +146,9 @@ interface SwaggerParameter {
   name: string;
   description?: string;
   collectionFormat?: string;
-  required: boolean;
+  required?: boolean;
   schema?: ResponseSchema;
-  type: string;
+  type?: string;
   default?: number;
   allowEmptyValue?: boolean;
   format?: string;
